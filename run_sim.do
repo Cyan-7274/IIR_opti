@@ -42,14 +42,6 @@ add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos_valid4
 add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos_valid5
 add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos_valid6
 
-# 以及每级w1/w2
-add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos1/w1
-add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos1/w2
-add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos2/w1
-add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos2/w2
-add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos3/w1
-add wave -position insertpoint -radix decimal sim:/tb_opti/u_top/sos3/w2
-
 
 run 0
 run 1000ns
