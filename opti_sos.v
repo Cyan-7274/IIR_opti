@@ -1,138 +1,106 @@
-// opti_sos_stage.v - Verilog-95兼容版，无增益校正
 module opti_sos_stage (
-    input         clk,
-    input         rst_n,
-    input         data_valid_in,
-    input  [15:0] data_in,     // Q2.14
-    input  [15:0] b0,
-    input  [15:0] b1,
-    input  [15:0] b2,
-    input  [15:0] a1,
-    input  [15:0] a2,
-    output reg    data_valid_out,
-    output reg [15:0] data_out
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        data_valid_in,
+    input  wire [15:0] data_in,
+    input  wire [15:0] b0,
+    input  wire [15:0] b1,
+    input  wire [15:0] b2,
+    input  wire [15:0] a1,
+    input  wire [15:0] a2,
+    output reg         data_valid_out,
+    output reg  [15:0] data_out
 );
 
-    // 状态变量
-    reg [15:0] s1_reg, s2_reg;
-    reg [15:0] x_reg, y_reg;
-    reg [31:0] b0x_result, b1x_result, b2x_result, a1y_result, a2y_result;
-    reg [2:0]  pipe_stage;
-    reg        processing;
-    reg [2:0]  mult_sel;
-    reg        mult_en;
-    reg [15:0] mult_a, mult_b;
-    wire [31:0] mult_p;
-    wire        mult_valid;
+    // 状态寄存器
+    reg [31:0] w1, w2;
+    reg [15:0] data_in_d;
+    reg        data_valid_in_d;
 
-    // 乘法器选择
-    parameter MULT_B0X = 3'd0;
-    parameter MULT_B1X = 3'd1;
-    parameter MULT_B2X = 3'd2;
-    parameter MULT_A1Y = 3'd3;
-    parameter MULT_A2Y = 3'd4;
-    parameter FRAC_BITS = 14;
+    // 保存一拍的输入
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            data_in_d <= 0;
+            data_valid_in_d <= 0;
+        end else begin
+            data_in_d <= data_in;
+            data_valid_in_d <= data_valid_in;
+        end
+    end
 
-    // 实例化乘法器
-    opti_multiplier u_multiplier (
-        .clk    (clk),
-        .rst_n  (rst_n),
-        .en     (mult_en),
-        .a      (mult_a),
-        .b      (mult_b),
-        .p      (mult_p),
-        .valid  (mult_valid)
+    // --- Booth乘法器实例 ---
+    // 1. b0 * w_new（w_new需提前算好，见下）
+    reg [31:0] w_new;
+    wire [31:0] p_b0_wnew, p_b1_w1, p_b2_w2, p_a1_w1, p_a2_w2;
+    wire        v_b0_wnew, v_b1_w1, v_b2_w2, v_a1_w1, v_a2_w2;
+
+    // 先计算a1*w1, a2*w2（老w1/w2）
+    booth_multiplier_pipe mul_a1_w1(
+        .clk(clk), .rst_n(rst_n), .start(data_valid_in), .a(a1), .b(w1[27:12]), .valid(v_a1_w1), .p(p_a1_w1)
+    );
+    booth_multiplier_pipe mul_a2_w2(
+        .clk(clk), .rst_n(rst_n), .start(data_valid_in), .a(a2), .b(w2[27:12]), .valid(v_a2_w2), .p(p_a2_w2)
     );
 
-    // 饱和函数 - Q2.14输出
-    function [15:0] sat16;
-        input [31:0] value;
-        begin
-            if (value[31]) begin
-                if (value[31:29] != 3'b111)
-                    sat16 = 16'h8001;
-                else begin
-                    sat16 = ((value + (1 << (FRAC_BITS-1))) >>> FRAC_BITS);
-                    if (sat16 == 16'h8000) sat16 = 16'h8001;
-                end
-            end else begin
-                if (value[31:29] != 3'b000)
-                    sat16 = 16'h7FFF;
-                else
-                    sat16 = ((value + (1 << (FRAC_BITS-1))) >> FRAC_BITS);
-            end
+    // w_new = data_in左移14位 - a1*w1 - a2*w2（需等待a1*w1和a2*w2都valid）
+    // pipeline控制
+    reg        wnew_valid;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            wnew_valid <= 0;
+        end else begin
+            wnew_valid <= v_a1_w1 & v_a2_w2;
         end
-    endfunction
+    end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            mult_sel <= MULT_B0X;
-            mult_en <= 1'b0;
-            mult_a <= 16'd0;
-            mult_b <= 16'd0;
-            processing <= 1'b0;
-            pipe_stage <= 3'd0;
-            data_valid_out <= 1'b0;
-            data_out <= 16'd0;
-            y_reg <= 16'd0;
-            s1_reg <= 16'd0;
-            s2_reg <= 16'd0;
+            w_new <= 0;
+        end else if (v_a1_w1 & v_a2_w2) begin
+            w_new <= $signed({data_in_d,14'd0}) - (p_a1_w1>>>14) - (p_a2_w2>>>14);
+            // 注意data_in_d与w1/w2配对
+        end
+    end
+
+    // b0*w_new, b1*w1, b2*w2（此时输入为新w_new、w1、w2）
+    booth_multiplier_pipe mul_b0_wnew(
+        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b0), .b(w_new[27:12]), .valid(v_b0_wnew), .p(p_b0_wnew)
+    );
+    booth_multiplier_pipe mul_b1_w1(
+        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b1), .b(w1[27:12]), .valid(v_b1_w1), .p(p_b1_w1)
+    );
+    booth_multiplier_pipe mul_b2_w2(
+        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b2), .b(w2[27:12]), .valid(v_b2_w2), .p(p_b2_w2)
+    );
+
+    // 输出累加，valid信号对齐
+    wire [31:0] sos_out_full = (p_b0_wnew>>>14) + (p_b1_w1>>>14) + (p_b2_w2>>>14);
+
+    // 饱和函数
+    function [15:0] sat16;
+        input [31:0] value;
+        begin
+            if (value[31:30] == 2'b01)      sat16 = 16'sh7FFF;
+            else if (value[31:30] == 2'b10) sat16 = 16'sh8000;
+            else                            sat16 = value[27:12];
+        end
+    endfunction
+
+    // 状态寄存器与输出
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            w1 <= 0;
+            w2 <= 0;
+            data_out <= 0;
+            data_valid_out <= 0;
+        end else if (v_b0_wnew & v_b1_w1 & v_b2_w2) begin
+            // 只有全部乘法结果都valid时才输出
+            w2 <= w1;
+            w1 <= w_new;
+            data_out <= sat16(sos_out_full);
+            data_valid_out <= 1'b1;
         end else begin
-            if (data_valid_in && !processing) begin
-                x_reg <= data_in;
-                processing <= 1'b1;
-                pipe_stage <= 3'd0;
-                mult_sel <= MULT_B0X;
-                mult_a <= b0;
-                mult_b <= data_in;
-                mult_en <= 1'b1;
-            end
-            if (mult_valid && processing) begin
-                case (mult_sel)
-                    MULT_B0X: begin
-                        b0x_result <= mult_p;
-                        mult_sel <= MULT_B1X;
-                        mult_a <= b1;
-                        mult_b <= x_reg;
-                        mult_en <= 1'b1;
-                    end
-                    MULT_B1X: begin
-                        b1x_result <= mult_p;
-                        y_reg <= sat16(b0x_result + {s1_reg, {FRAC_BITS{1'b0}}});
-                        mult_sel <= MULT_A1Y;
-                        mult_a <= a1;
-                        mult_b <= y_reg;
-                        mult_en <= 1'b1;
-                    end
-                    MULT_A1Y: begin
-                        a1y_result <= mult_p;
-                        mult_sel <= MULT_B2X;
-                        mult_a <= b2;
-                        mult_b <= x_reg;
-                        mult_en <= 1'b1;
-                    end
-                    MULT_B2X: begin
-                        b2x_result <= mult_p;
-                        mult_sel <= MULT_A2Y;
-                        mult_a <= a2;
-                        mult_b <= y_reg;
-                        mult_en <= 1'b1;
-                    end
-                    MULT_A2Y: begin
-                        a2y_result <= mult_p;
-                        s1_reg <= sat16(b1x_result - a1y_result + {s2_reg, {FRAC_BITS{1'b0}}});
-                        s2_reg <= sat16(b2x_result - a2y_result);
-                        data_out <= y_reg;
-                        data_valid_out <= 1'b1;
-                        processing <= 1'b0;
-                        mult_en <= 1'b0;
-                    end
-                    default: mult_en <= 1'b0;
-                endcase
-                pipe_stage <= pipe_stage + 3'd1;
-            end
-            if (data_valid_out && !mult_valid)
-                data_valid_out <= 1'b0;
+            data_valid_out <= 1'b0;
         end
     end
 endmodule

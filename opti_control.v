@@ -1,4 +1,3 @@
-// opti_control_pipeline.v - 适用于新系数顺序和纯流水控制
 module opti_control_pipeline (
     input  wire        clk,
     input  wire        rst_n,
@@ -13,13 +12,13 @@ module opti_control_pipeline (
     output reg         data_out_valid,
     output reg         stable_out
 );
-
     localparam STABLE_TIME = 10'd237;
     localparam MAX_SAMPLES = 11'd2047;
 
-    reg [9:0]  stable_counter;
-    reg        filter_initialized;
-    reg        first_data_received;
+    reg [9:0] stable_counter;
+    reg filter_initialized;
+    reg first_data_received;
+    reg last_valid;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -32,6 +31,7 @@ module opti_control_pipeline (
             stable_counter <= 10'd0;
             filter_initialized <= 1'b0;
             first_data_received <= 1'b0;
+            last_valid <= 1'b0;
         end else begin
             if (start && !pipeline_en) begin
                 pipeline_en <= 1'b1;
@@ -43,10 +43,15 @@ module opti_control_pipeline (
                 data_out_valid <= 1'b0;
                 stable_out <= 1'b0;
             end
-            if (pipeline_en && data_in_valid && !first_data_received)
+
+            if (pipeline_en && data_in_valid && !first_data_received) begin
                 first_data_received <= 1'b1;
+            end
+
+            // 输出数据处理
             if (pipeline_en && sos_out_valid) begin
                 data_out <= sos_out_data;
+                last_valid <= 1'b1;
                 if (!filter_initialized) begin
                     if (stable_counter >= STABLE_TIME) begin
                         filter_initialized <= 1'b1;
@@ -65,8 +70,11 @@ module opti_control_pipeline (
                         pipeline_en <= 1'b0;
                     end
                 end
-            end else if (!sos_out_valid)
+            end else if (last_valid) begin
+                // 保持至少一拍
                 data_out_valid <= 1'b0;
+                last_valid <= 1'b0;
+            end
         end
     end
 endmodule
