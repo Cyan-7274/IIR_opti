@@ -1,10 +1,11 @@
-// 修复版opti_sos_stage.v - 包含增益校正和正确的节点顺序
+// 修复版 opti_sos_stage.v - 包含增益校正和正确的节点顺序
 module opti_sos_stage (
     input  wire        clk,         // 时钟
     input  wire        rst_n,       // 低电平有效复位
     input  wire        data_valid_in, // 输入数据有效
     input  wire [15:0] data_in,     // 输入数据 (Q2.13格式)
     input  wire        is_last_stage, // 是否为最后一个SOS阶段，用于应用增益校正
+    input  wire [15:0] gain_correction, // 参数化增益校正系数
     
     // 固定系数输入 - 每个SOS阶段的系数是固定的
     input  wire [15:0] b0,          // 前馈系数b0
@@ -19,26 +20,22 @@ module opti_sos_stage (
 
     // 定点格式常量
     localparam FRAC_BITS = 13;      // 小数位数 - Q2.13格式
-    
-    // 增益校正系数 - Q2.13格式下的0.0154495813 ≈ 127 (127/8192 ≈ 0.0155...)
-    // 实际值: 0.0154495813 * 8192 = 126.509 ≈ 127
-    localparam [15:0] GAIN_CORRECTION = 16'd127;
-    
+
     // 状态变量寄存器 - 转置II型IIR结构
     reg [15:0] s1_reg, s2_reg;     // 延迟状态寄存器
-    
+
     // 乘法器接口信号
     reg  [2:0]  mult_sel;          // 乘法器选择 (哪个乘法正在进行)
     reg         mult_en;           // 乘法器使能
     reg  [15:0] mult_a, mult_b;    // 乘法器输入
     wire [31:0] mult_p;            // 乘法器输出
     wire        mult_valid;        // 乘法器输出有效
-    
+
     // 流水线数据传递寄存器
     reg [15:0] x_reg;             // 输入值寄存
     reg [15:0] y_reg;             // 输出值寄存
     reg [15:0] y_gain_corrected;  // 应用增益校正后的输出值
-    
+
     // 乘法结果寄存器
     reg [31:0] b0x_result;        // b0*x结果
     reg [31:0] b1x_result;        // b1*x结果
@@ -46,12 +43,12 @@ module opti_sos_stage (
     reg [31:0] a1y_result;        // a1*y结果
     reg [31:0] a2y_result;        // a2*y结果
     reg [31:0] gain_result;       // 增益校正结果
-    
+
     // 流水线控制信号
     reg [2:0] pipe_stage;         // 流水线阶段计数
     reg       processing;         // 处理中标志
     reg       apply_gain_correction; // 是否需要应用增益校正
-    
+
     // 乘法器选择常量
     localparam MULT_B0X = 3'd0;   // 计算b0*x
     localparam MULT_B1X = 3'd1;   // 计算b1*x
@@ -59,7 +56,7 @@ module opti_sos_stage (
     localparam MULT_A1Y = 3'd3;   // 计算a1*y
     localparam MULT_A2Y = 3'd4;   // 计算a2*y
     localparam MULT_GAIN = 3'd5;  // 计算增益校正
-    
+
     // 实例化流水线乘法器
     opti_multiplier u_multiplier (
         .clk    (clk),
@@ -70,7 +67,7 @@ module opti_sos_stage (
         .p      (mult_p),
         .valid  (mult_valid)
     );
-    
+
     // 检查是否为极值
     function is_extreme_value;
         input [15:0] value;
@@ -78,41 +75,29 @@ module opti_sos_stage (
             is_extreme_value = (value == 16'h7FFF || value == 16'h8000 || value == 16'h8001);
         end
     endfunction
-    
+
     // 饱和函数 - 将32位Q4.26结果转换为16位Q2.13
     function [15:0] sat16;
         input [31:0] value;
-        reg [15:0] result;
         begin
-            // 注意：Q4.26格式需要右移13位得到Q2.13
             if (value[31]) begin
-                // 负数
+                // 负数处理
                 if (value[31:29] != 3'b111) begin
-                    // 负溢出
-                    result = 16'h8001; // 避免使用最小负值-32768
+                    sat16 = 16'h8000; // 负溢出限制为最小负值
                 end else begin
-                    // 正常负数，右移并四舍五入
-                    result = ((value + (1 << (FRAC_BITS-1))) >>> FRAC_BITS);
-                    // 避免最小负值
-                    if (result == 16'h8000) begin
-                        result = 16'h8001;
-                    end
+                    sat16 = (value + (1 << (FRAC_BITS-1))) >> FRAC_BITS;
                 end
             end else begin
-                // 正数
+                // 正数处理
                 if (value[31:29] != 3'b000) begin
-                    // 正溢出
-                    result = 16'h7FFF; // 最大正值
+                    sat16 = 16'h7FFF; // 正溢出限制为最大正值
                 end else begin
-                    // 正常正数，右移并四舍五入
-                    result = ((value + (1 << (FRAC_BITS-1))) >> FRAC_BITS);
+                    sat16 = (value + (1 << (FRAC_BITS-1))) >> FRAC_BITS;
                 end
             end
-            
-            sat16 = result;
         end
     endfunction
-    
+
     // 乘法器控制逻辑
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -149,135 +134,65 @@ module opti_sos_stage (
             if (mult_valid && processing) begin
                 case (mult_sel)
                     MULT_B0X: begin
-                        // 保存b0*x结果
-                        b0x_result <= mult_p;
-                        
-                        // 启动b1*x乘法
-                        mult_sel <= MULT_B1X;
+                        b0x_result <= mult_p;     // 保存 b0*x 结果
+                        mult_sel <= MULT_B1X;     // 启动 b1*x
                         mult_a <= b1;
                         mult_b <= x_reg;
                         mult_en <= 1'b1;
                     end
                     
                     MULT_B1X: begin
-                        // 保存b1*x结果
-                        b1x_result <= mult_p;
-                        
-                        // 计算当前输出 y = b0*x + s1
-                        // 注意：这里y是当前周期的输出
-                        if (is_extreme_value(s1_reg)) begin
-                            // 异常状态检测：如果s1是极值，仅使用b0*x
-                            y_reg <= sat16(b0x_result);
-                        end else begin
-                            // 正常计算：y = b0*x + s1 (注意位移)
-                            y_reg <= sat16(b0x_result + {s1_reg, {FRAC_BITS{1'b0}}});
-                        end
-                        
-                        // 启动a1*y乘法
-                        mult_sel <= MULT_A1Y;
+                        b1x_result <= mult_p;     // 保存 b1*x 结果
+                        mult_sel <= MULT_A1Y;     // 启动 a1*y
                         mult_a <= a1;
                         mult_b <= y_reg;
                         mult_en <= 1'b1;
                     end
-                    
+
                     MULT_A1Y: begin
-                        // 保存a1*y结果
-                        if (is_extreme_value(y_reg)) begin
-                            a1y_result <= 32'd0; // 避免使用极值
-                        end else begin
-                            a1y_result <= mult_p;
-                        end
-                        
-                        // 启动b2*x乘法
-                        mult_sel <= MULT_B2X;
+                        a1y_result <= mult_p;     // 保存 a1*y 结果
+                        mult_sel <= MULT_B2X;     // 启动 b2*x
                         mult_a <= b2;
                         mult_b <= x_reg;
                         mult_en <= 1'b1;
                     end
-                    
+
                     MULT_B2X: begin
-                        // 保存b2*x结果
-                        b2x_result <= mult_p;
-                        
-                        // 启动a2*y乘法
-                        mult_sel <= MULT_A2Y;
+                        b2x_result <= mult_p;     // 保存 b2*x 结果
+                        mult_sel <= MULT_A2Y;     // 启动 a2*y
                         mult_a <= a2;
                         mult_b <= y_reg;
                         mult_en <= 1'b1;
                     end
-                    
+
                     MULT_A2Y: begin
-                        // 保存a2*y结果
-                        if (is_extreme_value(y_reg)) begin
-                            a2y_result <= 32'd0; // 避免使用极值
-                        end else begin
-                            a2y_result <= mult_p;
-                        end
-                        
-                        // 更新状态变量
-                        // s1 = b1*x - a1*y + s2
-                        if (is_extreme_value(y_reg) || is_extreme_value(s2_reg)) begin
-                            // 异常情况：只使用b1*x
-                            s1_reg <= sat16(b1x_result);
-                        end else begin
-                            // 正常计算
-                            s1_reg <= sat16(b1x_result - a1y_result + {s2_reg, {FRAC_BITS{1'b0}}});
-                        end
-                        
-                        // s2 = b2*x - a2*y
-                        if (is_extreme_value(y_reg)) begin
-                            // 异常情况：只使用b2*x
-                            s2_reg <= sat16(b2x_result);
-                        end else begin
-                            // 正常计算
-                            s2_reg <= sat16(b2x_result - a2y_result);
-                        end
-                        
-                        // 检查是否需要应用增益校正
+                        a2y_result <= mult_p;     // 保存 a2*y 结果
                         if (apply_gain_correction) begin
-                            // 启动增益校正乘法
-                            mult_sel <= MULT_GAIN;
+                            mult_sel <= MULT_GAIN; // 增益校正
                             mult_a <= y_reg;
-                            mult_b <= GAIN_CORRECTION;
+                            mult_b <= gain_correction;
                             mult_en <= 1'b1;
                         end else begin
-                            // 不需要增益校正，直接输出
-                            data_out <= y_reg;
+                            data_out <= sat16(mult_p);
                             data_valid_out <= 1'b1;
                             processing <= 1'b0;
-                            mult_en <= 1'b0;
                         end
                     end
-                    
+
                     MULT_GAIN: begin
-                        // 保存增益校正结果
-                        gain_result <= mult_p;
-                        
-                        // 应用增益校正
-                        y_gain_corrected <= sat16(mult_p);
-                        
-                        // 设置输出
+                        gain_result <= mult_p;    // 保存增益校正结果
                         data_out <= sat16(mult_p);
                         data_valid_out <= 1'b1;
-                        
-                        // 完成处理
                         processing <= 1'b0;
-                        mult_en <= 1'b0;
                     end
-                    
-                    default: begin
-                        mult_en <= 1'b0;
-                    end
+
                 endcase
-                
-                pipe_stage <= pipe_stage + 3'd1;
             end
             
-            // 复位输出有效信号（只保持一个周期）
-            if (data_valid_out && !mult_valid) begin
+            // 清除有效信号
+            if (data_valid_out && !mult_valid)
                 data_valid_out <= 1'b0;
-            end
         end
     end
-    
+
 endmodule
