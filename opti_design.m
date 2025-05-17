@@ -1,111 +1,127 @@
-%% 高速IIR滤波器设计与分析工具 v3.1 (支持RTL自动对齐)
-% 重点功能：
-% 1. 节点按极点模值排序，输出原始序号排序表
-% 2. 按排序后最后一节合入整体增益g，输出所有节点定点化后的Q格式系数表
-% 3. 输出适合直接粘贴进Verilog的硬编码整数表（含原始序号注释）
-% 4. 修正所有struct赋值，避免非法字段名
+clear
+close all
+clc
+%% 高速ADC低通IIR椭圆型滤波器设计、定点实现、响应分析与系数排序
+Fs = 80e6;
+Wp = 10e6/(Fs/2);
+Ws = 15e6/(Fs/2);
+Rp = 1;
+Rs = 40;
+wl = 16; fl = 14; % Q1.14
+strict_margin = 0.93;
 
-clear; clc;
-fprintf('====================================================\n');
-fprintf('       高速IIR滤波器设计与分析工具 v3.1            \n');
-fprintf('====================================================\n\n');
-
-%% Step 1: 滤波器参数
-filter_type = 'bandpass';
-Fs = 122.88e6;
-Fp1 = 20.72e6; Fp2 = 40.72e6;
-Fs1 = 18.72e6; Fs2 = 42.72e6;
-Wp = [Fp1 Fp2]/(Fs/2);
-Ws = [Fs1 Fs2]/(Fs/2);
-Rp = 1; Rs = 50;
-fprintf('采样频率: %.2f MHz\n', Fs/1e6);
-fprintf('通带: %.2f-%.2f MHz 阻带: <%.2f, >%.2f MHz\n', Fp1/1e6,Fp2/1e6,Fs1/1e6,Fs2/1e6);
-fprintf('通带纹波: %.1f dB, 阻带衰减: %.1f dB\n', Rp, Rs);
-
-%% Step 2: 滤波器设计
+% 1. 设计
 [N, Wn] = ellipord(Wp, Ws, Rp, Rs);
-[B, A] = ellip(N, Rp, Rs, Wn, filter_type);
+[B, A] = ellip(N, Rp, Rs, Wn, 'low');
 [sos, g] = tf2sos(B, A);
-fprintf('\n阶数: %d, SOS节点数: %d, 初始增益g: %.10f\n', N, size(sos,1), g);
 
-%% Step 3: 极点模值排序
-N_sections = size(sos,1);
-pole_mags = zeros(N_sections,1);
-for i=1:N_sections
-    a_sec = [1 sos(i,5:6)];
-    poles = roots(a_sec);
-    pole_mags(i) = max(abs(poles));
-end
-[~, sort_idx] = sort(pole_mags, 'descend');
-sorted_sos = sos(sort_idx,:);
+% 2. 按极点模值排序
+sos_poles = cellfun(@(a) max(abs(roots([1 a(5:6)]))), num2cell(sos,2));
+[~, idx] = sort(sos_poles, 'descend');
+sos = sos(idx,:);
 
-fprintf('\n===== 节点排序结果(原始节点号) =====\n');
-for i=1:N_sections
-    fprintf('排序后第%d节 ← 原始节点%d, 极点模值=%.10f\n', i, sort_idx(i), max(abs(roots([1 sos(sort_idx(i),5:6)]))));
+% 3. 均匀分配增益
+root_gain = g^(1/size(sos,1));
+for i=1:size(sos,1)
+    sos(i,1:3) = sos(i,1:3) * root_gain;
 end
 
-%% Step 4: 定点化+增益分配
-word_length = 16; frac_length = 14;
-scale_factor = 2^frac_length;
-fprintf('\n===== Q格式定点化系数表(Q2.14, 以整数形式输出，适合Verilog硬编码) =====\n');
-fprintf('// 排序后节点编号, 原始节点号, b0, b1, b2, a1, a2\n');
-fixed_coeffs = zeros(N_sections,5); % 存储输出
+% 4. 定点量化
+scale = 2^fl;
+sos_fixed = round(sos * scale) / scale;
 
-for i = 1:N_sections
-    coeffs = sorted_sos(i,1:5);
-    % 只对排序后最后一节合入增益g
-    if i==N_sections
-        coeffs = coeffs * g;
-    end
-    % Q格式量化
-    q_coeffs = round(coeffs*scale_factor);
-    fixed_coeffs(i,:) = q_coeffs;
-    fprintf('%% 节点%d (原始%d)\n', i, sort_idx(i));
-    fprintf('%d, %d, %d, %d, %d, %d\n', i-1, q_coeffs(1), q_coeffs(2), q_coeffs(3), q_coeffs(4), q_coeffs(5));
+% 5. 稳定性分析
+sysA = 1;
+for i=1:size(sos_fixed,1)
+    sysA = conv(sysA, [1, sos_fixed(i,5:6)]);
+end
+poles = roots(sysA);
+maxpole = max(abs(poles));
+is_stable = maxpole < strict_margin;
+
+% 6. 响应分析
+figure('Name','滤波器响应分析');
+subplot(2,2,1);
+[H, f] = freqz(sos_fixed, 1024, Fs);
+plot(f/1e6, 20*log10(abs(H))); grid on;
+xlabel('频率 (MHz)'); ylabel('幅度 (dB)'); title('幅频响应');
+
+subplot(2,2,2);
+plot(f/1e6, unwrap(angle(H))*180/pi); grid on;
+xlabel('频率 (MHz)'); ylabel('相位 (°)'); title('相频响应');
+
+subplot(2,2,3);
+grpdelay(sos_fixed, 1024, Fs); 
+xlabel('频率 (MHz)'); ylabel('群时延 (点)'); title('群延迟');
+
+subplot(2,2,4);
+zplane(sos_fixed(:,1:3), [ones(size(sos_fixed,1),1) sos_fixed(:,4:5)]);
+title('零极点图');
+
+% 脉冲响应
+imp = [1; zeros(127,1)];
+x = imp;
+for k = 1:size(sos_fixed,1)
+    b = sos_fixed(k,1:3);
+    a = [1 sos_fixed(k,5:6)];
+    x = filter(b, a, x);
+end
+resp = x;
+
+% --- 稳定时间估算 ---
+thresh = 1e-3;        % 阈值，可根据工程需求调整
+min_hold = 10;        % 连续10点低于阈值才算稳定
+abs_resp = abs(resp);
+below = abs_resp < thresh;
+stable_idx = find(movsum(below, min_hold) >= min_hold, 1); % 首次出现连续10点均低于阈值的位置
+
+if isempty(stable_idx)
+    fprintf('脉冲响应未在分析窗口内收敛到阈值。\n');
+    stable_idx = NaN;
+else
+    fprintf('脉冲响应在第 %d 个采样点后收敛到 |幅值| < %.1e。\n', stable_idx, thresh);
 end
 
-%% Step 5: 输出Verilog case代码片段建议
-fprintf('\n// 建议Verilog case片段如下:\n');
-for i = 1:N_sections
-    fprintf('// 排序后第%d节（原始节点%d）\n', i, sort_idx(i));
-    fprintf('3d%d: begin\n', i-1);
-    fprintf('    b0_reg = 16h%s;\n', dec2hex(typecast(int16(fixed_coeffs(i,1)),'uint16'),4));
-    fprintf('    b1_reg = 16h%s;\n', dec2hex(typecast(int16(fixed_coeffs(i,2)),'uint16'),4));
-    fprintf('    b2_reg = 16h%s;\n', dec2hex(typecast(int16(fixed_coeffs(i,3)),'uint16'),4));
-    fprintf('    a1_reg = 16h%s;\n', dec2hex(typecast(int16(fixed_coeffs(i,4)),'uint16'),4));
-    fprintf('    a2_reg = 16h%s;\n', dec2hex(typecast(int16(fixed_coeffs(i,5)),'uint16'),4));
-    fprintf('end\n');
+% 绘图标注
+figure('Name','单位脉冲响应');
+stem(0:length(resp)-1, resp, 'filled');
+if ~isnan(stable_idx)
+    hold on;
+    xline(stable_idx-1, 'r--', sprintf('稳定点%d',stable_idx-1));
+    hold off;
+end
+xlabel('采样点'); ylabel('幅度'); title('单位脉冲响应（含稳定时间标注）'); grid on;
+
+
+% 7. 输出关键信息
+fprintf('\n=== 高速ADC低通IIR滤波器 Q1.14 ===\n');
+fprintf('采样率: %.2f MHz\n', Fs/1e6);
+fprintf('通带: %.2f MHz, 阻带: %.2f MHz\n', 10, 15);
+fprintf('类型: 椭圆型 | 阶数: %d | 定点格式: Q1.14\n', N);
+fprintf('极点最大值: %.5f | 是否稳定: %s\n', maxpole, tf(is_stable));
+fprintf('分段(SOS)数: %d\n', size(sos_fixed,1));
+disp('Q1.14定点系数（已排序，每行：[b0 b1 b2 a1 a2]）：');
+disp(sos_fixed(:,[1 2 3 5 6]));
+
+% 8. Verilog hex导出
+coeff_list = reshape(sos_fixed(:,[1 2 3 5 6])', [], 1);
+coeff_int = int16(round(coeff_list * scale));
+fid = fopen('adc_lowpass_coeffs_hex.txt','w');
+for i = 1:length(coeff_int)
+    hexstr = dec2hex(typecast(coeff_int(i),'uint16'),4);
+    fprintf(fid, "16'h%s // %d\n", hexstr, coeff_int(i));
+end
+fclose(fid);
+
+function s = tf(cond)
+if cond, s='✅'; else, s='❌'; end
 end
 
-%% Step 6: 完整输出Q格式浮点值（便于查验）
-fprintf('\n// Q2.14格式下浮点值表(便于软件模型或查验):\n');
-for i = 1:N_sections
-    coeffs = double(fixed_coeffs(i,:))/scale_factor;
-    fprintf('%% 节点%d (原始%d): ', i, sort_idx(i));
-    fprintf('b0=%.8f, b1=%.8f, b2=%.8f, a1=%.8f, a2=%.8f\n', coeffs(1), coeffs(2), coeffs(3), coeffs(4), coeffs(5));
+
+scale = 2^14;
+for i = 1:size(coeffs,1)
+    ci = int16(round(coeffs(i,:) * scale));
+    hexstr = dec2hex(typecast(ci,'uint16'),4);
+    disp(['b0: 16''sh' hexstr(1,:) ', b1: 16''sh' hexstr(2,:) ', b2: 16''sh' hexstr(3,:) , ...
+          ', a1: 16''sh' hexstr(4,:) ', a2: 16''sh' hexstr(5,:)]);
 end
-
-%% 友情提示
-fprintf('\n// RTL请严格按此排序和Q整数表硬编码，最后一节系数已乘以g，不再单独做增益校正。\n');
-
-%% 策略分析结构体字段名修正范例
-strategy_keys = {'gain_last', 'gain_even', 'gain_separate'};
-strategy_names = {'集中增益到最后节点', '均匀分布到所有节点', '独立增益系数'};
-strategy_results = struct();
-
-% for i = 1:length(strategy_keys)
-%     key = strategy_keys{i};
-%     name = strategy_names{i};
-%     % ...分析逻辑...
-%     stable = true; % 这里只是示例
-%     if stable
-%         strategy_results.(key) = 'stable';
-%     else
-%         strategy_results.(key) = 'unstable';
-%     end
-% end
-% 
-% fprintf('\n===== 总结与最优策略选择 =====\n');
-% for i = 1:length(strategy_keys)
-%     fprintf('%s: %s\n', strategy_names{i}, strategy_results.(strategy_keys{i}));
-% end
