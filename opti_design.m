@@ -92,36 +92,35 @@ if ~isnan(stable_idx)
 end
 xlabel('采样点'); ylabel('幅度'); title('单位脉冲响应（含稳定时间标注）'); grid on;
 
-
 % 7. 输出关键信息
 fprintf('\n=== 高速ADC低通IIR滤波器 Q1.14 ===\n');
 fprintf('采样率: %.2f MHz\n', Fs/1e6);
 fprintf('通带: %.2f MHz, 阻带: %.2f MHz\n', 10, 15);
 fprintf('类型: 椭圆型 | 阶数: %d | 定点格式: Q1.14\n', N);
-fprintf('极点最大值: %.5f | 是否稳定: %s\n', maxpole, tf(is_stable));
+fprintf('极点最大值: %.5f | 是否稳定: %s\n', maxpole, string(is_stable));
 fprintf('分段(SOS)数: %d\n', size(sos_fixed,1));
-disp('Q1.14定点系数（已排序，每行：[b0 b1 b2 a1 a2]）：');
+fprintf('Q1.14定点系数（已排序，每行：[b0 b1 b2 a1 a2]）：\n');
 disp(sos_fixed(:,[1 2 3 5 6]));
 
-% 8. Verilog hex导出
+% 以HEX格式输出到命令行，便于verilog比对
 coeff_list = reshape(sos_fixed(:,[1 2 3 5 6])', [], 1);
 coeff_int = int16(round(coeff_list * scale));
-fid = fopen('adc_lowpass_coeffs_hex.txt','w');
+fprintf('Q1.14 HEX系数输出（顺序：[b0 b1 b2 a1 a2]，每行一组）：\n');
+for i = 1:length(coeff_int)/5
+    idx = (i-1)*5 + (1:5);
+    % 补码输出，4位大写，不带0x
+    hexstrs = dec2hex(typecast(coeff_int(idx),'uint16'),4);
+    fprintf('%s %s %s %s %s\n', hexstrs(1,:), hexstrs(2,:), hexstrs(3,:), hexstrs(4,:), hexstrs(5,:));
+end
+
+% 保存为iir_coeffs.hex
+fid = fopen('iir_coeffs.hex','w');
 for i = 1:length(coeff_int)
     hexstr = dec2hex(typecast(coeff_int(i),'uint16'),4);
-    fprintf(fid, "16'h%s // %d\n", hexstr, coeff_int(i));
-end
-fclose(fid);
-
-function s = tf(cond)
-if cond, s='✅'; else, s='❌'; end
+    fprintf(fid, '%s\n', upper(hexstr));
 end
 
+fclose(fid);save('opti_filter.mat', 'sos_fixed', 'wl', 'fl', 'scale');
 
-scale = 2^14;
-for i = 1:size(coeffs,1)
-    ci = int16(round(coeffs(i,:) * scale));
-    hexstr = dec2hex(typecast(ci,'uint16'),4);
-    disp(['b0: 16''sh' hexstr(1,:) ', b1: 16''sh' hexstr(2,:) ', b2: 16''sh' hexstr(3,:) , ...
-          ', a1: 16''sh' hexstr(4,:) ', a2: 16''sh' hexstr(5,:)]);
-end
+
+% ------ END ------

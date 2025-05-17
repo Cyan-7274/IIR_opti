@@ -1,4 +1,4 @@
-# 编译所有RTL与tb文件
+# 编译所有RTL与tb文件（绝对路径保留）
 vlib work
 vmap work work
 
@@ -9,11 +9,11 @@ vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_control.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_top.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/tb/tb_opti.v"
 
-# 仿真tb
+# 启动仿真
 vsim -novopt work.tb_opti
 
-# 添加常用信号观察
-add wave -radix decimal -radix decimal -divider {== 顶层信号 ==}
+# ========== 顶层主要信号（十进制） ==========
+add wave -radix decimal -divider {== 顶层输入输出 ==}
 add wave -radix decimal sim:/tb_opti/clk
 add wave -radix decimal sim:/tb_opti/rst_n
 add wave -radix decimal sim:/tb_opti/start
@@ -25,7 +25,8 @@ add wave -radix decimal sim:/tb_opti/data_out
 add wave -radix decimal sim:/tb_opti/data_out_valid
 add wave -radix decimal sim:/tb_opti/stable_out
 
-# 观测顶层级联信号
+# ========== 级联各级数据/valid信号 ==========
+add wave -radix decimal -divider {== 各级sos输入/输出 ==}
 add wave -radix decimal sim:/tb_opti/u_top/sos_data0
 add wave -radix decimal sim:/tb_opti/u_top/sos_data1
 add wave -radix decimal sim:/tb_opti/u_top/sos_data2
@@ -42,8 +43,22 @@ add wave -radix decimal sim:/tb_opti/u_top/sos_valid4
 add wave -radix decimal sim:/tb_opti/u_top/sos_valid5
 add wave -radix decimal sim:/tb_opti/u_top/sos_valid6
 
+# ========== 控制模块关键信号 ==========
+add wave -radix decimal -divider {== 控制信号 ==}
 add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/pipeline_en
+add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/filter_done
+add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/stable_out
+add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/addr
+add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/data_out
+add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/data_out_valid
 
-run 22us
+# ========== 可选：乘法器/反馈内部节点（如进一步debug可解注释） ==========
+# add wave -radix decimal sim:/tb_opti/u_top/sos1/s1
+# add wave -radix decimal sim:/tb_opti/u_top/sos1/s2
+# add wave -radix decimal sim:/tb_opti/u_top/sos2/s1
+# add wave -radix decimal sim:/tb_opti/u_top/sos2/s2
 
-# 如需观察更底层信号，可再补充路径
+# ========== 仿真运行 ==========
+run 25us
+
+# 如需更长仿真或更详细波形，可适当调整run时长或添加更深信号路径

@@ -1,4 +1,5 @@
-module opti_sos_stage (
+// 转置二型IIR SOS节，高速定点Q2.14实现，流水线Booth-4乘法器
+module opti_sos (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        data_valid_in,
@@ -12,96 +13,100 @@ module opti_sos_stage (
     output reg  [15:0] data_out    // Q2.14
 );
 
-    // Q2.14格式的历史寄存器
-    reg [15:0] w1, w2;
-    reg [15:0] data_in_d;
-    reg        data_valid_in_d;
+    // 转置二型状态寄存器
+    reg signed [31:0] s1, s2; // Q4.28，保证累加不溢出
 
-    // 打拍保存输入
+    // 延迟数据有效信号，与流水线乘法器对齐
+    reg data_valid_in_d [0:2];
+    integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            data_in_d <= 0;
-            data_valid_in_d <= 0;
+            for (i=0;i<3;i=i+1) data_valid_in_d[i] <= 1'b0;
         end else begin
-            data_in_d <= data_in;
-            data_valid_in_d <= data_valid_in;
+            data_valid_in_d[0] <= data_valid_in;
+            for (i=1;i<3;i=i+1)
+                data_valid_in_d[i] <= data_valid_in_d[i-1];
         end
     end
 
-    // ==== feedback term multiplication ====
-    wire [31:0] p_a1_w1, p_a2_w2;
-    wire        v_a1_w1, v_a2_w2;
-    booth_multiplier_pipe mul_a1_w1(
-        .clk(clk), .rst_n(rst_n), .start(data_valid_in), .a(a1), .b(w1), .valid(v_a1_w1), .p(p_a1_w1)
-    );
-    booth_multiplier_pipe mul_a2_w2(
-        .clk(clk), .rst_n(rst_n), .start(data_valid_in), .a(a2), .b(w2), .valid(v_a2_w2), .p(p_a2_w2)
-    );
+    // ----- 乘法部分 -----
+    // Q2.14 * Q2.14 => Q4.28
+    wire [31:0] p_b0_x, p_b1_x, p_b2_x, p_a1_y, p_a2_y;
+    wire        v_b0_x, v_b1_x, v_b2_x, v_a1_y, v_a2_y;
 
-    // ==== w_new = data_in - a1*w1 - a2*w2, 保持Q2.14 ====
-    reg [15:0] w_new_q14;
-    reg        wnew_valid;
+    // 输入x延迟，与流水线乘积对齐
+    reg [15:0] x_delay [0:2];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wnew_valid <= 0;
-            w_new_q14  <= 0;
+            for (i=0;i<3;i=i+1) x_delay[i] <= 0;
         end else begin
-            wnew_valid <= v_a1_w1 & v_a2_w2;
-            if (v_a1_w1 & v_a2_w2) begin
-                w_new_q14 <= $signed(data_in_d)
-                           - $signed(p_a1_w1[29:14])
-                           - $signed(p_a2_w2[29:14]);
-            end
+            x_delay[0] <= data_in;
+            for (i=1;i<3;i=i+1)
+                x_delay[i] <= x_delay[i-1];
         end
     end
 
-    // ==== 前馈项乘法 ====
-    wire [31:0] p_b0_wnew, p_b1_w1, p_b2_w2;
-    wire        v_b0_wnew, v_b1_w1, v_b2_w2;
-    booth_multiplier_pipe mul_b0_wnew(
-        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b0), .b(w_new_q14), .valid(v_b0_wnew), .p(p_b0_wnew)
+    // y(n-1)、y(n-2)保存，加法做Q4.28
+    reg signed [31:0] y1, y2;
+
+    // 前馈部分
+    opti_multiplier mul_b0_x(
+        .clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b0), .b(data_in), .p(p_b0_x), .valid_out(v_b0_x)
     );
-    booth_multiplier_pipe mul_b1_w1(
-        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b1), .b(w1), .valid(v_b1_w1), .p(p_b1_w1)
+    opti_multiplier mul_b1_x(
+        .clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b1), .b(x_delay[1]), .p(p_b1_x), .valid_out(v_b1_x)
     );
-    booth_multiplier_pipe mul_b2_w2(
-        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b2), .b(w2), .valid(v_b2_w2), .p(p_b2_w2)
+    opti_multiplier mul_b2_x(
+        .clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b2), .b(x_delay[2]), .p(p_b2_x), .valid_out(v_b2_x)
     );
 
-    // ==== 累加Q4.28 ====
-    // 注意：符号扩展到34位
-    wire [33:0] acc_sum = {{2{p_b0_wnew[31]}}, p_b0_wnew} +
-                          {{2{p_b1_w1[31]}},  p_b1_w1}  +
-                          {{2{p_b2_w2[31]}},  p_b2_w2};
+    // 反馈部分
+    opti_multiplier mul_a1_y(
+        .clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(a1), .b(y1[29:14]), .p(p_a1_y), .valid_out(v_a1_y)
+    );
+    opti_multiplier mul_a2_y(
+        .clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(a2), .b(y2[29:14]), .p(p_a2_y), .valid_out(v_a2_y)
+    );
 
-    // ==== Q4.28 -> Q2.14：右移14位 ====
-    wire [19:0] shifted = acc_sum[33:14]; // 20位，最高位符号
+    // --- 累加输出 ---
+    // Q4.28 = sum(前馈) - sum(反馈)
+    wire signed [33:0] acc_sum = 
+        {{2{p_b0_x[31]}}, p_b0_x} + 
+        {{2{p_b1_x[31]}}, p_b1_x} + 
+        {{2{p_b2_x[31]}}, p_b2_x} -
+        {{2{p_a1_y[31]}}, p_a1_y} -
+        {{2{p_a2_y[31]}}, p_a2_y};
 
-    // ==== 饱和处理 ====
-    reg [15:0] sat_q2_14;
+    // Q4.28 -> Q2.14，取高位（含符号扩展），用于输出和反馈
+    wire signed [19:0] q2_14_val = acc_sum[33:14];
+
+    // 饱和处理
+    reg [15:0] y_q2_14;
     always @(*) begin
-        if (shifted[19:15] == {5{shifted[19]}})
-            sat_q2_14 = shifted[15:0];
-        else if (shifted[19] == 1'b0)
-            sat_q2_14 = 16'h7FFF;
+        if (q2_14_val[19:15] == {5{q2_14_val[19]}})
+            y_q2_14 = q2_14_val[15:0];
+        else if (q2_14_val[19] == 1'b0)
+            y_q2_14 = 16'h7FFF;
         else
-            sat_q2_14 = 16'h8000;
+            y_q2_14 = 16'h8000;
     end
 
-    // ==== 输出与状态 ====
+    // --- 状态更新 ---
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            w1 <= 0;
-            w2 <= 0;
+            y1 <= 0; y2 <= 0;
             data_out <= 0;
-            data_valid_out <= 0;
-        end else if (v_b0_wnew & v_b1_w1 & v_b2_w2) begin
-            w2 <= w1;
-            w1 <= w_new_q14;
-            data_out <= sat_q2_14;
+            data_valid_out <= 1'b0;
+        end else if (v_b0_x & v_b1_x & v_b2_x & v_a1_y & v_a2_y) begin
+            // 输出
+            data_out <= y_q2_14;
             data_valid_out <= 1'b1;
+            // 状态寄存器更新（保持Q4.28格式）
+            y2 <= y1;
+            y1 <= { {18{y_q2_14[15]}}, y_q2_14 }; // Q2.14 -> Q4.28符号扩展
         end else begin
             data_valid_out <= 1'b0;
         end
     end
+
 endmodule

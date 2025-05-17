@@ -1,73 +1,70 @@
-module booth_multiplier_pipe(
+// Q2.14*Q2.14 全流水线Booth-4乘法器
+module opti_multiplier (
     input  wire        clk,
     input  wire        rst_n,
-    input  wire        start,
-    input  wire [15:0] a,   // Q2.14
-    input  wire [15:0] b,   // Q2.14
-    output reg  [31:0] p,
-    output reg         valid
+    input  wire        valid_in,
+    input  wire [15:0] a, // Q2.14
+    input  wire [15:0] b, // Q2.14
+    output wire [31:0] p, // Q4.28
+    output wire        valid_out
 );
-    reg busy;
-    reg [4:0] count;
-    reg [33:0] acc;         // accumulator, 2 guard bits
-    reg [33:0] acc_next;
-    reg [17:0] b_ext;       // 16位b扩展2位
-    reg [17:0] b_ext_neg;
-    reg [34:0] a_buf;       // Booth编码用（a移位并补零）
-    reg [2:0] booth_code;
-    reg [33:0] booth_term;
-    
+
+    // 4-bit Booth编码，每4位a，对应一次部分积
+    localparam STAGE = 8; // 16位=>8组Booth-4
+    reg [15:0] a_pipe [0:STAGE];
+    reg [15:0] b_pipe [0:STAGE];
+    reg        valid_pipe [0:STAGE];
+
+    reg signed [31:0] pp [0:STAGE-1];
+    reg signed [31:0] sum_pipe [0:STAGE];
+
+    integer i;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            acc   <= 0;
-            count <= 0;
-            busy  <= 0;
-            valid <= 0;
-            p     <= 0;
-            a_buf <= 0;
+        if(!rst_n) begin
+            for(i=0;i<=STAGE;i=i+1) begin
+                a_pipe[i] <= 0;
+                b_pipe[i] <= 0;
+                valid_pipe[i] <= 0;
+                sum_pipe[i] <= 0;
+            end
         end else begin
-            if (start && !busy) begin
-                acc   <= 0;
-                count <= 0;
-                busy  <= 1;
-                valid <= 0;
-                // a_buf拼接两位0，便于Booth-4编码
-                a_buf <= {a, 2'b00};
-            end else if (busy) begin
-                // 取当前编码3位
-                booth_code = a_buf[2:0];
-                // 生成booth_term
-                case (booth_code)
-                    3'b000, 3'b111: booth_term = 0;
-                    3'b001, 3'b010: booth_term =  b_ext;
-                    3'b101, 3'b110: booth_term = -b_ext;
-                    3'b011:         booth_term =  b_ext << 1;
-                    3'b100:         booth_term = -b_ext << 1;
-                    default:        booth_term = 0;
-                endcase
-                // 积分累加
-                acc <= $signed(acc) + ($signed(booth_term) <<< (2*count));
-                // a_buf算术右移2位
-                a_buf <= {a_buf[34], a_buf[34:2]};
-                count <= count + 1;
-                if (count == 7) begin
-                    p     <= acc[31:0];
-                    valid <= 1;
-                    busy  <= 0;
-                end
-            end else begin
-                valid <= 0;
+            // 输入数据移入管线
+            a_pipe[0] <= a;
+            b_pipe[0] <= b;
+            valid_pipe[0] <= valid_in;
+            sum_pipe[0] <= 0;
+            // 流水线移位
+            for(i=1;i<=STAGE;i=i+1) begin
+                a_pipe[i] <= a_pipe[i-1];
+                b_pipe[i] <= b_pipe[i-1];
+                valid_pipe[i] <= valid_pipe[i-1];
+                sum_pipe[i] <= sum_pipe[i-1] + pp[i-1];
             end
         end
     end
 
-    // b_ext/b_ext_neg在每次start时准备
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            b_ext     <= 0;
-        end else if (start && !busy) begin
-            b_ext     <= {b[15], b, 1'b0}; // 有符号扩展
+    // 生成部分积：Booth-4编码
+    genvar k;
+    generate
+        for(k=0;k<STAGE;k=k+1) begin: booth_stage
+            wire [2:0] booth_bits = {a_pipe[k][2*k+2], a_pipe[k][2*k+1], a_pipe[k][2*k]};
+            wire signed [17:0] b_ext = {b_pipe[k][15], b_pipe[k], 1'b0}; // sign-extend+1位0
+            reg signed [31:0] booth_pp;
+            always @(*) begin
+                case(booth_bits)
+                    3'b000, 3'b111: booth_pp = 0;
+                    3'b001, 3'b010: booth_pp = b_ext <<< (2*k);
+                    3'b011:         booth_pp = (b_ext << 1) <<< (2*k);
+                    3'b100:         booth_pp = -(b_ext << 1) <<< (2*k);
+                    3'b101, 3'b110: booth_pp = -b_ext <<< (2*k);
+                    default:        booth_pp = 0;
+                endcase
+            end
+            always @(posedge clk) pp[k] <= booth_pp;
         end
-    end
+    endgenerate
+
+    assign p = sum_pipe[STAGE];
+    assign valid_out = valid_pipe[STAGE];
 
 endmodule
