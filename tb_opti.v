@@ -25,7 +25,7 @@ module tb_opti;
     integer cycle;
     reg [15:0] test_vector [0:2047];
     initial begin
-        $readmemh("test_signal.hex", test_vector);
+        $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
         rst_n = 0; start = 0; data_in = 0; data_in_valid = 0;
         #100;
         rst_n = 1;

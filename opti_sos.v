@@ -1,100 +1,107 @@
-module opti_sos_stage(
+module opti_sos_stage (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        data_valid_in,
-    input  wire [15:0] data_in,      // Q2.14格式
-    input  wire [15:0] b0, b1, b2,   // Q2.14
-    input  wire [15:0] a1, a2,       // Q2.14
+    input  wire [15:0] data_in,   // Q2.14
+    input  wire [15:0] b0,
+    input  wire [15:0] b1,
+    input  wire [15:0] b2,
+    input  wire [15:0] a1,
+    input  wire [15:0] a2,
     output reg         data_valid_out,
-    output reg  [15:0] data_out      // Q2.14格式
+    output reg  [15:0] data_out    // Q2.14
 );
 
-    // 状态寄存器，z^-1和z^-2
-    reg signed [15:0] x_1, x_2;
-    reg signed [15:0] y_1, y_2;
+    // Q2.14格式的历史寄存器
+    reg [15:0] w1, w2;
+    reg [15:0] data_in_d;
+    reg        data_valid_in_d;
 
-    // 输入缓存
+    // 打拍保存输入
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            x_1 <= 16'd0;
-            x_2 <= 16'd0;
-            y_1 <= 16'd0;
-            y_2 <= 16'd0;
-        end else if (data_valid_in) begin
-            x_2 <= x_1;
-            x_1 <= data_in;
-            y_2 <= y_1;
-            y_1 <= data_out;
+            data_in_d <= 0;
+            data_valid_in_d <= 0;
+        end else begin
+            data_in_d <= data_in;
+            data_valid_in_d <= data_valid_in;
         end
     end
 
-    // 乘法与累加
-    // b0*x[n] + b1*x[n-1] + b2*x[n-2] - a1*y[n-1] - a2*y[n-2]
-    // 每步均Q2.14格式，乘法结果Q4.28，需做溢出保护和格式转换
+    // ==== feedback term multiplication ====
+    wire [31:0] p_a1_w1, p_a2_w2;
+    wire        v_a1_w1, v_a2_w2;
+    booth_multiplier_pipe mul_a1_w1(
+        .clk(clk), .rst_n(rst_n), .start(data_valid_in), .a(a1), .b(w1), .valid(v_a1_w1), .p(p_a1_w1)
+    );
+    booth_multiplier_pipe mul_a2_w2(
+        .clk(clk), .rst_n(rst_n), .start(data_valid_in), .a(a2), .b(w2), .valid(v_a2_w2), .p(p_a2_w2)
+    );
 
-    // 乘法结果
-    wire signed [31:0] mult_b0 = $signed(b0) * $signed(data_in); // Q4.28
-    wire signed [31:0] mult_b1 = $signed(b1) * $signed(x_1);     // Q4.28
-    wire signed [31:0] mult_b2 = $signed(b2) * $signed(x_2);     // Q4.28
-    wire signed [31:0] mult_a1 = $signed(a1) * $signed(y_1);     // Q4.28
-    wire signed [31:0] mult_a2 = $signed(a2) * $signed(y_2);     // Q4.28
-
-    // 格式转换和溢出保护函数
-    function automatic [15:0] q428_to_q214;
-        input signed [31:0] in32;
-        reg signed [31:0] shifted;
-        reg pos_overflow, neg_overflow;
-        reg signed [15:0] Q2_14_MAX, Q2_14_MIN;
-        begin
-            shifted      = in32 >>> 14;
-            Q2_14_MAX    = 16'sb0111_1111_1111_1111;
-            Q2_14_MIN    = 16'sb1000_0000_0000_0000;
-            // 溢出判断：高位不是全符号扩展，且方向一致
-            pos_overflow = (shifted[31:17] != {15{shifted[16]}}) && (shifted[16] == 0);
-            neg_overflow = (shifted[31:17] != {15{shifted[16]}}) && (shifted[16] == 1);
-            if (pos_overflow)
-                q428_to_q214 = Q2_14_MAX;
-            else if (neg_overflow)
-                q428_to_q214 = Q2_14_MIN;
-            else
-                q428_to_q214 = shifted[16:1];
-        end
-    endfunction
-
-    // 各项溢出保护
-    wire signed [15:0] term_b0 = q428_to_q214(mult_b0);
-    wire signed [15:0] term_b1 = q428_to_q214(mult_b1);
-    wire signed [15:0] term_b2 = q428_to_q214(mult_b2);
-    wire signed [15:0] term_a1 = q428_to_q214(mult_a1);
-    wire signed [15:0] term_a2 = q428_to_q214(mult_a2);
-
-    // 累加
-    wire signed [17:0] sum_b = $signed(term_b0) + $signed(term_b1) + $signed(term_b2); // 多两位，防止溢出
-    wire signed [17:0] sum_a = $signed(term_a1) + $signed(term_a2);
-
-    wire signed [17:0] y_temp = sum_b - sum_a;
-
-    // 最终溢出保护
-    wire signed [15:0] Q2_14_MAX = 16'sb0111_1111_1111_1111;
-    wire signed [15:0] Q2_14_MIN = 16'sb1000_0000_0000_0000;
-    wire pos_overflow_final = (y_temp > Q2_14_MAX);
-    wire neg_overflow_final = (y_temp < Q2_14_MIN);
-
-    wire signed [15:0] y_q2_14 = pos_overflow_final ? Q2_14_MAX :
-                                 neg_overflow_final ? Q2_14_MIN :
-                                 y_temp[15:0];
-
-    // 输出
+    // ==== w_new = data_in - a1*w1 - a2*w2, 保持Q2.14 ====
+    reg [15:0] w_new_q14;
+    reg        wnew_valid;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            data_out <= 16'd0;
-            data_valid_out <= 1'b0;
-        end else if (data_valid_in) begin
-            data_out <= y_q2_14;
+            wnew_valid <= 0;
+            w_new_q14  <= 0;
+        end else begin
+            wnew_valid <= v_a1_w1 & v_a2_w2;
+            if (v_a1_w1 & v_a2_w2) begin
+                w_new_q14 <= $signed(data_in_d)
+                           - $signed(p_a1_w1[29:14])
+                           - $signed(p_a2_w2[29:14]);
+            end
+        end
+    end
+
+    // ==== 前馈项乘法 ====
+    wire [31:0] p_b0_wnew, p_b1_w1, p_b2_w2;
+    wire        v_b0_wnew, v_b1_w1, v_b2_w2;
+    booth_multiplier_pipe mul_b0_wnew(
+        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b0), .b(w_new_q14), .valid(v_b0_wnew), .p(p_b0_wnew)
+    );
+    booth_multiplier_pipe mul_b1_w1(
+        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b1), .b(w1), .valid(v_b1_w1), .p(p_b1_w1)
+    );
+    booth_multiplier_pipe mul_b2_w2(
+        .clk(clk), .rst_n(rst_n), .start(wnew_valid), .a(b2), .b(w2), .valid(v_b2_w2), .p(p_b2_w2)
+    );
+
+    // ==== 累加Q4.28 ====
+    // 注意：符号扩展到34位
+    wire [33:0] acc_sum = {{2{p_b0_wnew[31]}}, p_b0_wnew} +
+                          {{2{p_b1_w1[31]}},  p_b1_w1}  +
+                          {{2{p_b2_w2[31]}},  p_b2_w2};
+
+    // ==== Q4.28 -> Q2.14：右移14位 ====
+    wire [19:0] shifted = acc_sum[33:14]; // 20位，最高位符号
+
+    // ==== 饱和处理 ====
+    reg [15:0] sat_q2_14;
+    always @(*) begin
+        if (shifted[19:15] == {5{shifted[19]}})
+            sat_q2_14 = shifted[15:0];
+        else if (shifted[19] == 1'b0)
+            sat_q2_14 = 16'h7FFF;
+        else
+            sat_q2_14 = 16'h8000;
+    end
+
+    // ==== 输出与状态 ====
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            w1 <= 0;
+            w2 <= 0;
+            data_out <= 0;
+            data_valid_out <= 0;
+        end else if (v_b0_wnew & v_b1_w1 & v_b2_w2) begin
+            w2 <= w1;
+            w1 <= w_new_q14;
+            data_out <= sat_q2_14;
             data_valid_out <= 1'b1;
         end else begin
             data_valid_out <= 1'b0;
         end
     end
-
 endmodule
