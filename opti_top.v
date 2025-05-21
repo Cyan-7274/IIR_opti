@@ -1,104 +1,52 @@
-// 顶层模块，显式级联sos与控制，接口标准
+// 顶层模块，适配Q2.22格式和新课题参数，4级Chebyshev II IIR滤波器（Verilog-2001标准，声明规范）
 module opti_top (
-    input  wire        clk,
-    input  wire        rst_n,
-    input  wire        start,
-    input  wire [15:0] data_in,        // Q2.14格式
-    input  wire        data_in_valid,
-    output wire        filter_done,
-    output wire [10:0] addr,
-    output wire [15:0] data_out,
-    output wire        data_out_valid,
-    output wire        stable_out
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         start,
+    input  wire signed [23:0] data_in,        // Q2.22格式
+    input  wire         data_in_valid,
+    output wire         filter_done,
+    output wire [10:0]  addr,
+    output wire signed [23:0] data_out,       // Q2.22
+    output wire         data_out_valid,
+    output wire         stable_out
 );
-    wire        pipeline_en;
-    // 显式展开6级信号
-    wire [15:0] sos_data0, sos_data1, sos_data2, sos_data3, sos_data4, sos_data5, sos_data6;
-    wire        sos_valid0, sos_valid1, sos_valid2, sos_valid3, sos_valid4, sos_valid5, sos_valid6;
 
-    assign sos_data0  = data_in;
-    assign sos_valid0 = data_in_valid && pipeline_en;
+    // 声明全部在前面（Verilog-2001规范）
+    wire signed [23:0] sos_data [0:4];
+    wire sos_valid [0:4];
+    wire signed [23:0] b0 [0:3], b1 [0:3], b2 [0:3], a1 [0:3], a2 [0:3];
+    wire pipeline_en;
 
-    // 第1级系数
-    wire [15:0] b0_1, b1_1, b2_1, a1_1, a2_1;
-    opti_coeffs coeffs1(.stage_index(3'd0), .b0(b0_1), .b1(b1_1), .b2(b2_1), .a1(a1_1), .a2(a2_1));
-    opti_sos sos1(
-        .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid0),
-        .data_in(sos_data0),
-        .b0(b0_1), .b1(b1_1), .b2(b2_1), .a1(a1_1), .a2(a2_1),
-        .data_valid_out(sos_valid1),
-        .data_out(sos_data1)
-    );
+    assign sos_data[0]  = data_in;
+    assign sos_valid[0] = data_in_valid && pipeline_en;
 
-    // 第2级系数
-    wire [15:0] b0_2, b1_2, b2_2, a1_2, a2_2;
-    opti_coeffs coeffs2(.stage_index(3'd1), .b0(b0_2), .b1(b1_2), .b2(b2_2), .a1(a1_2), .a2(a2_2));
-    opti_sos sos2(
-        .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid1),
-        .data_in(sos_data1),
-        .b0(b0_2), .b1(b1_2), .b2(b2_2), .a1(a1_2), .a2(a2_2),
-        .data_valid_out(sos_valid2),
-        .data_out(sos_data2)
-    );
+    genvar i;
+    generate
+        for (i = 0; i < 4; i = i + 1) begin: gen_coeff_sos
+            opti_coeffs u_coeff (
+                .sos_idx(i[1:0]),
+                .b0(b0[i]), .b1(b1[i]), .b2(b2[i]), .a1(a1[i]), .a2(a2[i])
+            );
+            opti_sos u_sos (
+                .clk(clk), .rst_n(rst_n),
+                .data_valid_in(sos_valid[i]),
+                .data_in(sos_data[i]),
+                .b0(b0[i]), .b1(b1[i]), .b2(b2[i]), .a1(a1[i]), .a2(a2[i]),
+                .data_valid_out(sos_valid[i+1]),
+                .data_out(sos_data[i+1])
+            );
+        end
+    endgenerate
 
-    // 第3级系数
-    wire [15:0] b0_3, b1_3, b2_3, a1_3, a2_3;
-    opti_coeffs coeffs3(.stage_index(3'd2), .b0(b0_3), .b1(b1_3), .b2(b2_3), .a1(a1_3), .a2(a2_3));
-    opti_sos sos3(
-        .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid2),
-        .data_in(sos_data2),
-        .b0(b0_3), .b1(b1_3), .b2(b2_3), .a1(a1_3), .a2(a2_3),
-        .data_valid_out(sos_valid3),
-        .data_out(sos_data3)
-    );
-
-    // 第4级系数
-    wire [15:0] b0_4, b1_4, b2_4, a1_4, a2_4;
-    opti_coeffs coeffs4(.stage_index(3'd3), .b0(b0_4), .b1(b1_4), .b2(b2_4), .a1(a1_4), .a2(a2_4));
-    opti_sos sos4(
-        .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid3),
-        .data_in(sos_data3),
-        .b0(b0_4), .b1(b1_4), .b2(b2_4), .a1(a1_4), .a2(a2_4),
-        .data_valid_out(sos_valid4),
-        .data_out(sos_data4)
-    );
-
-    // 第5级系数
-    wire [15:0] b0_5, b1_5, b2_5, a1_5, a2_5;
-    opti_coeffs coeffs5(.stage_index(3'd4), .b0(b0_5), .b1(b1_5), .b2(b2_5), .a1(a1_5), .a2(a2_5));
-    opti_sos sos5(
-        .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid4),
-        .data_in(sos_data4),
-        .b0(b0_5), .b1(b1_5), .b2(b2_5), .a1(a1_5), .a2(a2_5),
-        .data_valid_out(sos_valid5),
-        .data_out(sos_data5)
-    );
-
-    // 第6级（最后一级）系数
-    wire [15:0] b0_6, b1_6, b2_6, a1_6, a2_6;
-    opti_coeffs coeffs6(.stage_index(3'd5), .b0(b0_6), .b1(b1_6), .b2(b2_6), .a1(a1_6), .a2(a2_6));
-    opti_sos sos6(
-        .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid5),
-        .data_in(sos_data5),
-        .b0(b0_6), .b1(b1_6), .b2(b2_6), .a1(a1_6), .a2(a2_6),
-        .data_valid_out(sos_valid6),
-        .data_out(sos_data6)
-    );
-
-    // 控制模块
     opti_control u_ctrl (
         .clk(clk), .rst_n(rst_n), .start(start),
         .data_in_valid(data_in_valid),
-        .sos_out_valid(sos_valid6),
-        .sos_out_data(sos_data6),
+        .sos_out_valid(sos_valid[4]),
+        .sos_out_data(sos_data[4]),
         .filter_done(filter_done), .pipeline_en(pipeline_en),
         .addr(addr), .data_out(data_out),
         .data_out_valid(data_out_valid), .stable_out(stable_out)
     );
+
 endmodule

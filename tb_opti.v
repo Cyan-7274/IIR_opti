@@ -2,13 +2,13 @@
 
 module tb_opti;
     reg clk, rst_n, start;
-    reg [15:0] data_in;
+    reg signed [23:0] data_in;      // Q2.22输入
     reg data_in_valid;
     wire filter_done, data_out_valid, stable_out;
     wire [10:0] addr;
-    wire [15:0] data_out;
+    wire signed [23:0] data_out;    // Q2.22输出
 
-    // 顶层实例
+    // 顶层IIR实例
     opti_top u_top (
         .clk(clk), .rst_n(rst_n), .start(start),
         .data_in(data_in), .data_in_valid(data_in_valid),
@@ -23,18 +23,19 @@ module tb_opti;
 
     // 测试数据
     localparam N = 2048;
-    reg [15:0] test_vector [0:N-1];
-    reg [15:0] ref_vector  [0:N-1];
+    reg signed [23:0] test_vector [0:N-1];
+    reg signed [23:0] ref_vector  [0:N-1];
 
     // 输出采集
-    reg [15:0] out_vector  [0:N-1];
+    reg signed [23:0] out_vector  [0:N-1];
     integer out_cnt = 0;
 
     // 输入激励
     integer i;
     initial begin
-        $readmemh("test_signal.hex", test_vector);
-        $readmemh("reference_output.hex", ref_vector);
+        $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
+        $readmemh("D:/A_Hesper/IIRfilter/qts/sim/reference_output.hex", ref_vector);
+
 
         rst_n = 0; start = 0; data_in = 0; data_in_valid = 0;
         #100;
@@ -56,7 +57,7 @@ module tb_opti;
     // 输出采集与比对
     integer err_cnt = 0;
     integer max_err = 0;
-    reg [15:0] ref_val, out_val;
+    reg signed [23:0] ref_val, out_val;
     initial begin
         out_cnt = 0;
         wait(rst_n == 1);
@@ -101,19 +102,18 @@ module tb_opti;
 
     // 监控信号（可选，建议保留以便debug）
     initial begin
-        $display("      T    addr   data_in   data_out   dout_valid filter_done pipeline_en stable_out");
-        $display("--------------------------------------------------------------------------");
+        $display("      T    addr   data_in         data_out        dout_valid filter_done pipeline_en stable_out");
+        $display("-----------------------------------------------------------------------------------------------");
         forever begin
             @(posedge clk);
-            $display("%8t %4h   %4h   %4h    %b       %b        %b         %b",
+            $display("%8t %4h   %8h   %8h    %b       %b        %b         %b",
                 $time, addr, data_in, data_out, data_out_valid, filter_done, u_top.u_ctrl.pipeline_en, stable_out);
 
-            $display("  [VLD] %b %b %b %b %b %b %b",
-                u_top.sos_valid0, u_top.sos_valid1, u_top.sos_valid2, u_top.sos_valid3,
-                u_top.sos_valid4, u_top.sos_valid5, u_top.sos_valid6);
-            $display("  [DIN] %h %h %h %h %h %h %h",
-                u_top.sos_data0, u_top.sos_data1, u_top.sos_data2, u_top.sos_data3,
-                u_top.sos_data4, u_top.sos_data5, u_top.sos_data6);
+            // 可以根据顶层信号命名适配
+            // $display("  [VLD] %b %b %b %b %b",
+            //     u_top.sos_valid[0], u_top.sos_valid[1], u_top.sos_valid[2], u_top.sos_valid[3], u_top.sos_valid[4]);
+            // $display("  [DIN] %h %h %h %h %h",
+            //     u_top.sos_data[0], u_top.sos_data[1], u_top.sos_data[2], u_top.sos_data[3], u_top.sos_data[4]);
         end
     end
 endmodule

@@ -26,22 +26,17 @@ add wave -radix decimal sim:/tb_opti/data_out_valid
 add wave -radix decimal sim:/tb_opti/stable_out
 
 # ========== 级联各级数据/valid信号 ==========
-add wave -radix decimal -divider {== 各级sos输入/输出 ==}
-add wave -radix decimal sim:/tb_opti/u_top/sos_data0
-add wave -radix decimal sim:/tb_opti/u_top/sos_data1
-add wave -radix decimal sim:/tb_opti/u_top/sos_data2
-add wave -radix decimal sim:/tb_opti/u_top/sos_data3
-add wave -radix decimal sim:/tb_opti/u_top/sos_data4
-add wave -radix decimal sim:/tb_opti/u_top/sos_data5
-add wave -radix decimal sim:/tb_opti/u_top/sos_data6
+add wave -radix decimal sim:/tb_opti/u_top/sos_data(0)
+add wave -radix decimal sim:/tb_opti/u_top/sos_data(1)
+add wave -radix decimal sim:/tb_opti/u_top/sos_data(2)
+add wave -radix decimal sim:/tb_opti/u_top/sos_data(3)
+add wave -radix decimal sim:/tb_opti/u_top/sos_data(4)
 
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid0
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid1
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid2
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid3
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid4
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid5
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid6
+add wave -radix decimal sim:/tb_opti/u_top/sos_valid(0)
+add wave -radix decimal sim:/tb_opti/u_top/sos_valid(1)
+add wave -radix decimal sim:/tb_opti/u_top/sos_valid(2)
+add wave -radix decimal sim:/tb_opti/u_top/sos_valid(3)
+add wave -radix decimal sim:/tb_opti/u_top/sos_valid(4)
 
 # ========== 控制模块关键信号 ==========
 add wave -radix decimal -divider {== 控制信号 ==}
@@ -53,10 +48,10 @@ add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/data_out
 add wave -radix decimal sim:/tb_opti/u_top/u_ctrl/data_out_valid
 
 # ========== 可选：乘法器/反馈内部节点（如进一步debug可解注释） ==========
-# add wave -radix decimal sim:/tb_opti/u_top/sos1/s1
-# add wave -radix decimal sim:/tb_opti/u_top/sos1/s2
-# add wave -radix decimal sim:/tb_opti/u_top/sos2/s1
-# add wave -radix decimal sim:/tb_opti/u_top/sos2/s2
+# add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos[0].u_sos/...
+# add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos[1].u_sos/...
+# add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos[2].u_sos/...
+# add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos[3].u_sos/...
 
 # ========== 仿真运行 ==========
 run 25us

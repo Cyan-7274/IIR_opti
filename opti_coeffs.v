@@ -1,31 +1,49 @@
-// 自动生成：Q2.14格式滤波器系数模块（每行5个16位补码HEX，顺序[b0 b1 b2 a1 a2]）
+// Q2.22格式IIR滤波器系数模块（Verilog-2001标准，声明规范）
 module opti_coeffs (
-    input  wire       stage,    // SOS节编号（0/1）
-    output reg [15:0] b0, b1, b2, a1, a2
+    input  wire [1:0] sos_idx, // 4节，只需2位
+    output reg signed [23:0] b0, b1, b2, a1, a2
 );
+
+    reg signed [23:0] coeff_mem [0:19]; // 4节*5=20组
+
+    initial begin
+        $readmemh("D:/A_Hesper/IIRfilter/qts/sim/iir_coeffs.hex", coeff_mem);
+    end
+
     always @(*) begin
-        case(stage)
-            1'b0: begin
-                b0 = 16'h0A64;
-                b1 = 16'hF802;
-                b2 = 16'h0A64;
-                a1 = 16'hABB8;
-                a2 = 16'h3721;
+        case (sos_idx)
+            2'd0: begin
+                b0 = coeff_mem[0];
+                b1 = coeff_mem[1];
+                b2 = coeff_mem[2];
+                a1 = coeff_mem[3];
+                a2 = coeff_mem[4];
             end
-            1'b1: begin
-                b0 = 16'h0A64;
-                b1 = 16'h0783;
-                b2 = 16'h0A64;
-                a1 = 16'hA7F9;
-                a2 = 16'h23AD;
+            2'd1: begin
+                b0 = coeff_mem[5];
+                b1 = coeff_mem[6];
+                b2 = coeff_mem[7];
+                a1 = coeff_mem[8];
+                a2 = coeff_mem[9];
+            end
+            2'd2: begin
+                b0 = coeff_mem[10];
+                b1 = coeff_mem[11];
+                b2 = coeff_mem[12];
+                a1 = coeff_mem[13];
+                a2 = coeff_mem[14];
+            end
+            2'd3: begin
+                b0 = coeff_mem[15];
+                b1 = coeff_mem[16];
+                b2 = coeff_mem[17];
+                a1 = coeff_mem[18];
+                a2 = coeff_mem[19];
             end
             default: begin
-                b0 = 16'h0000; 
-                b1 = 16'h0000; 
-                b2 = 16'h0000; 
-                a1 = 16'h0000; 
-                a2 = 16'h0000;
+                b0 = 24'sd0; b1 = 24'sd0; b2 = 24'sd0; a1 = 24'sd0; a2 = 24'sd0;
             end
         endcase
     end
+
 endmodule
