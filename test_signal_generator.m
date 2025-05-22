@@ -27,13 +27,15 @@ y_q22 = int32(y_q22);
 %% 4. HEX文件输出
 fid = fopen('test_signal.hex','w');  % 输入激励
 for k = 1:N
-    fprintf(fid, '%06X\n', typecast(x_q22(k), 'uint32')); % Q2.22输入
+    val = bitand(x_q22(k), hex2dec('FFFFFF')); % Q2.22补码，24bit
+    fprintf(fid, '%06X\n', val);
 end
 fclose(fid);
 
 fid = fopen('reference_output.hex','w'); % 参考输出
 for k = 1:N
-    fprintf(fid, '%06X\n', typecast(y_q22(k), 'uint32')); % Q2.22输出
+    val = bitand(y_q22(k), hex2dec('FFFFFF'));
+    fprintf(fid, '%06X\n', val);
 end
 fclose(fid);
 
