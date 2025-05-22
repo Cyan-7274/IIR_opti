@@ -12,24 +12,15 @@ vlog -work work "D:/A_Hesper/IIRfilter/qts/tb/tb_opti.v"
 # 启动仿真
 vsim -novopt work.tb_opti
 
-# ========== 顶层主要信号（十进制） ==========
-add wave -radix decimal -divider {== 顶层输入输出 ==}
-add wave -radix decimal sim:/tb_opti/clk
-add wave -radix decimal sim:/tb_opti/rst_n
-add wave -radix decimal sim:/tb_opti/start
-add wave -radix decimal sim:/tb_opti/data_in
-add wave -radix decimal sim:/tb_opti/data_in_valid
-add wave -radix decimal sim:/tb_opti/filter_done
-add wave -radix decimal sim:/tb_opti/addr
-add wave -radix decimal sim:/tb_opti/data_out
-add wave -radix decimal sim:/tb_opti/data_out_valid
-add wave -radix decimal sim:/tb_opti/stable_out
+# 添加关键信号波形
+add wave -radix hex sim:/tb_opti/clk
+add wave -radix hex sim:/tb_opti/rst_n
+add wave -radix hex sim:/tb_opti/start
+add wave -radix hex sim:/tb_opti/data_in
+add wave -radix hex sim:/tb_opti/data_in_valid
+add wave -radix hex sim:/tb_opti/data_out
+add wave -radix hex sim:/tb_opti/data_out_valid
 
-add wave -radix decimal sim:/tb_opti/data_in
-add wave -radix decimal sim:/tb_opti/data_out
-
-
-# ========== 仿真运行 ==========
-run 25us
+run 22us
 
 # 仿真结束后tb_dut_output.hex将用于matlab比对
