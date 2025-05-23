@@ -52,9 +52,9 @@ module opti_control (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             pipeline_en <= 1'b0;
-        else if (state == IDLE && start)
+        else if (state == RUN)
             pipeline_en <= 1'b1;
-        else if (state == DONE)
+        else
             pipeline_en <= 1'b0;
     end
 

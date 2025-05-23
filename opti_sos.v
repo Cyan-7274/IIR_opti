@@ -10,7 +10,13 @@ module opti_sos (
     input  wire signed [23:0] a1,
     input  wire signed [23:0] a2,
     output reg          data_valid_out,
-    output reg  signed [23:0] data_out    // Q2.22
+    output reg  signed [23:0] data_out,    // Q2.22
+    // 调试端口：乘法器48位中间值
+    output wire signed [47:0] dbg_sum_b0_x,
+    output wire signed [47:0] dbg_sum_b1_x,
+    output wire signed [47:0] dbg_sum_b2_x,
+    output wire signed [47:0] dbg_sum_a1_y,
+    output wire signed [47:0] dbg_sum_a2_y
 );
 
     // 状态寄存器，保存y(n-1), y(n-2)（Q2.22格式）
@@ -79,11 +85,11 @@ module opti_sos (
     end
 
     // ---- 乘法器实例化 ----
-    opti_multiplier mul_b0_x(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b0), .b(data_in), .p(p_b0_x), .valid_out(v_b0_x));
-    opti_multiplier mul_b1_x(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b1), .b(x_delay1), .p(p_b1_x), .valid_out(v_b1_x));
-    opti_multiplier mul_b2_x(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b2), .b(x_delay2), .p(p_b2_x), .valid_out(v_b2_x));
-    opti_multiplier mul_a1_y(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(a1), .b(y1), .p(p_a1_y), .valid_out(v_a1_y));
-    opti_multiplier mul_a2_y(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(a2), .b(y2), .p(p_a2_y), .valid_out(v_a2_y));
+    opti_multiplier mul_b0_x(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b0), .b(data_in), .p(p_b0_x), .valid_out(v_b0_x), .debug_sum(dbg_sum_b0_x));
+    opti_multiplier mul_b1_x(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b1), .b(x_delay1), .p(p_b1_x), .valid_out(v_b1_x), .debug_sum(dbg_sum_b1_x));
+    opti_multiplier mul_b2_x(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(b2), .b(x_delay2), .p(p_b2_x), .valid_out(v_b2_x), .debug_sum(dbg_sum_b2_x));
+    opti_multiplier mul_a1_y(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(a1), .b(y1), .p(p_a1_y), .valid_out(v_a1_y), .debug_sum(dbg_sum_a1_y));
+    opti_multiplier mul_a2_y(.clk(clk), .rst_n(rst_n), .valid_in(data_valid_in), .a(a2), .b(y2), .p(p_a2_y), .valid_out(v_a2_y), .debug_sum(dbg_sum_a2_y));
 
     // ---- 累加 ----
     assign acc_sum = 

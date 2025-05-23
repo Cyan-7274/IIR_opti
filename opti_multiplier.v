@@ -6,7 +6,9 @@ module opti_multiplier (
     input  wire signed [23:0] a, // Q2.22
     input  wire signed [23:0] b, // Q2.22
     output reg  signed [23:0] p, // Q2.22
-    output reg          valid_out
+    output reg          valid_out,
+    // 调试用输出：最终48位累加和（溢出前）
+    output reg  signed [47:0] debug_sum
 );
 
     // ----------- 固定常数定义（无parameter） -----------
@@ -87,6 +89,7 @@ module opti_multiplier (
         if(!rst_n) begin
             p <= 24'sd0;
             valid_out <= 1'b0;
+            debug_sum <= 48'sd0;
         end else begin
             valid_out <= valid_pipe[12];
             if(mult_res[47:46]==2'b01) begin
@@ -96,7 +99,7 @@ module opti_multiplier (
             end else begin
                 p <= p_q22;
             end
+            debug_sum <= sum_pipe[12];
         end
     end
-
 endmodule
