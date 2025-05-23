@@ -1,104 +1,57 @@
-# 编译所有RTL与tb文件（绝对路径保留）
-vlib work
-vmap work work
+# run_sim.do -- ModelSim/QuestaSim batch simulation script for opti IIR项目
 
+# 1. 清理旧库
+if {[file exists work]} {
+    vdel -all
+}
+vlib work
+
+# 2. 编译RTL和testbench
 vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_multiplier.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_coeffs.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_sos.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_control.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/rtl/optimized/opti_top.v"
 vlog -work work "D:/A_Hesper/IIRfilter/qts/tb/tb_opti.v"
+# 3. 启动仿真
+vsim work.tb_opti
 
-# 启动仿真
-vsim -novopt work.tb_opti
+# 输入信号
+add wave -noupdate -radix signed tb_opti/u_top/data_in
 
-# ========== 顶层主要信号（十进制） ==========
-add wave -radix decimal -divider {== 顶层输入输出 ==}
-add wave -radix decimal sim:/tb_opti/clk
-add wave -radix decimal sim:/tb_opti/rst_n
-add wave -radix decimal sim:/tb_opti/start
-add wave -radix decimal sim:/tb_opti/data_in
-add wave -radix decimal sim:/tb_opti/data_in_valid
-add wave -radix decimal sim:/tb_opti/filter_done
-add wave -radix decimal sim:/tb_opti/addr
-add wave -radix decimal sim:/tb_opti/data_out
-add wave -radix decimal sim:/tb_opti/data_out_valid
-add wave -radix decimal sim:/tb_opti/stable_out
+# 第一级sos的五路乘法器（完全按你的树状图路径）
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b0_x/a
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b0_x/b
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b0_x/p
+add wave -noupdate -radix hex    tb_opti/u_top/u_sos0/mul_b0_x/valid_out
 
-add wave -radix decimal sim:/tb_opti/data_in
-add wave -radix decimal sim:/tb_opti/data_out
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b1_x/a
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b1_x/b
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b1_x/p
+add wave -noupdate -radix hex    tb_opti/u_top/u_sos0/mul_b1_x/valid_out
 
-# ========== 监控sos级联之间的输入输出 ==========
-add wave -radix decimal -divider {== SOS级联信号 ==}
-add wave -radix decimal sim:/tb_opti/u_top/sos_data
-add wave -radix decimal sim:/tb_opti/u_top/sos_valid
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b2_x/a
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b2_x/b
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b2_x/p
+add wave -noupdate -radix hex    tb_opti/u_top/u_sos0/mul_b2_x/valid_out
 
-# ========== 监控每一级SOS内部关键信号 ==========
-add wave -radix decimal -divider {== SOS0内部反馈 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/y1
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/y2
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/x_delay
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/x_delay[0]
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/x_delay[1]
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a1_y/a
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a1_y/b
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a1_y/p
+add wave -noupdate -radix hex    tb_opti/u_top/u_sos0/mul_a1_y/valid_out
 
-add wave -radix decimal -divider {== SOS1内部反馈 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/y1
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/y2
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/x_delay
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/x_delay[0]
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/x_delay[1]
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a2_y/a
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a2_y/b
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a2_y/p
+add wave -noupdate -radix hex    tb_opti/u_top/u_sos0/mul_a2_y/valid_out
 
-add wave -radix decimal -divider {== SOS2内部反馈 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/y1
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/y2
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/x_delay
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/x_delay[0]
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/x_delay[1]
+# 如需观察中间debug_sum信号
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b0_x/debug_sum
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b1_x/debug_sum
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_b2_x/debug_sum
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a1_y/debug_sum
+add wave -noupdate -radix signed tb_opti/u_top/u_sos0/mul_a2_y/debug_sum
 
-add wave -radix decimal -divider {== SOS3内部反馈 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/y1
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/y2
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/x_delay
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/x_delay[0]
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/x_delay[1]
+run 22 us
 
-# ========== 监控每一级SOS的乘法器输出 ==========
-add wave -radix decimal -divider {== SOS0乘法器输出 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/p_b0_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/p_b1_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/p_b2_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/p_a1_y
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/p_a2_y
-
-add wave -radix decimal -divider {== SOS1乘法器输出 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/p_b0_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/p_b1_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/p_b2_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/p_a1_y
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/p_a2_y
-
-add wave -radix decimal -divider {== SOS2乘法器输出 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/p_b0_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/p_b1_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/p_b2_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/p_a1_y
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/p_a2_y
-
-add wave -radix decimal -divider {== SOS3乘法器输出 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/p_b0_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/p_b1_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/p_b2_x
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/p_a1_y
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/p_a2_y
-
-# ========== 监控每级SOS的累加输出 ==========
-add wave -radix decimal -divider {== SOS累加输出 ==}
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(0).u_sos/acc_sum
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(1).u_sos/acc_sum
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(2).u_sos/acc_sum
-add wave -radix decimal sim:/tb_opti/u_top/gen_coeff_sos(3).u_sos/acc_sum
-
-# ========== 仿真运行 ==========
-run 25us
-
-# 仿真结束后tb_dut_output.hex将用于matlab比对
+# quit -force

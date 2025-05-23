@@ -61,20 +61,21 @@ module opti_multiplier (
     genvar k;
     generate
         for(k=0;k<12;k=k+1) begin: booth_stage
-            reg signed [47:0] booth_pp;
-            wire signed [25:0] b_ext;
-            assign b_ext = {b_pipe[k][23], b_pipe[k], 1'b0, 1'b0};
-            always @(*) begin
-                case(booth_bits[k])
-                    3'b000, 3'b111: booth_pp = 48'sd0;
-                    3'b001, 3'b010: booth_pp = b_ext <<< (2*k);
-                    3'b011:         booth_pp = (b_ext << 1) <<< (2*k);
-                    3'b100:         booth_pp = -(b_ext << 1) <<< (2*k);
-                    3'b101, 3'b110: booth_pp = -b_ext <<< (2*k);
-                    default:        booth_pp = 48'sd0;
-                endcase
+            wire signed [25:0] b_ext = {b_pipe[k][23], b_pipe[k], 1'b0, 1'b0};
+            always @(posedge clk or negedge rst_n) begin
+                if(!rst_n) begin
+                    pp[k] <= 48'sd0;
+                end else begin
+                    case(booth_bits[k])
+                        3'b000, 3'b111: pp[k] <= 48'sd0;
+                        3'b001, 3'b010: pp[k] <= b_ext <<< (2*k);
+                        3'b011:         pp[k] <= (b_ext << 1) <<< (2*k);
+                        3'b100:         pp[k] <= -(b_ext << 1) <<< (2*k);
+                        3'b101, 3'b110: pp[k] <= -b_ext <<< (2*k);
+                        default:        pp[k] <= 48'sd0;
+                    endcase
+                end
             end
-            always @(posedge clk) pp[k] <= booth_pp;
         end
     endgenerate
 
