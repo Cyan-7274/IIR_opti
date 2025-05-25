@@ -1,4 +1,4 @@
-// Q2.22*Q2.22 全流水线Booth-4乘法器（无parameter，Verilog-2001标准，位宽安全）
+// Q2.22*Q2.22 Booth-4全流水线乘法器（Verilog-2001标准，无块内声明，每拍一结果）
 module opti_multiplier (
     input  wire         clk,
     input  wire         rst_n,
@@ -6,101 +6,91 @@ module opti_multiplier (
     input  wire signed [23:0] a, // Q2.22
     input  wire signed [23:0] b, // Q2.22
     output reg  signed [23:0] p, // Q2.22
-    output reg          valid_out,
-    // 调试用输出：最终48位累加和（溢出前）
-    output reg  signed [47:0] debug_sum
+    output reg          valid_out
 );
 
-    // ----------- 固定常数定义（无parameter） -----------
-    // 24位输入，Booth-4组数为12
-    // 管线寄存器、部分积、累加器
-    reg signed [23:0] a_pipe [0:12];
-    reg signed [23:0] b_pipe [0:12];
-    reg               valid_pipe [0:12];
-    reg signed [47:0] pp   [0:11];
-    reg signed [47:0] sum_pipe [0:12];
+    localparam STAGE_NUM = 12;
+    reg signed [23:0] a_pipe [0:STAGE_NUM];
+    reg signed [23:0] b_pipe [0:STAGE_NUM];
+    reg signed [47:0] acc_pipe [0:STAGE_NUM];
+    reg               valid_pipe [0:STAGE_NUM];
 
-    // booth_bits安全提取
-    reg [2:0] booth_bits [0:11];
+    // 临时变量全部声明在模块头部
+    reg [2:0] booth_code;
+    reg signed [25:0] b_ext;
+    reg signed [47:0] booth_pp;
     integer i;
-    integer j;
 
-    // ----------- 管线推进 -----------
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            for(i=0;i<=12;i=i+1) begin
+            for(i=0;i<=STAGE_NUM;i=i+1) begin
                 a_pipe[i] <= 24'sd0;
                 b_pipe[i] <= 24'sd0;
+                acc_pipe[i] <= 48'sd0;
                 valid_pipe[i] <= 1'b0;
-                sum_pipe[i] <= 48'sd0;
             end
         end else begin
             a_pipe[0] <= a;
             b_pipe[0] <= b;
+            acc_pipe[0] <= 48'sd0;
             valid_pipe[0] <= valid_in;
-            sum_pipe[0] <= 48'sd0;
-            for(i=1;i<=12;i=i+1) begin
-                a_pipe[i] <= a_pipe[i-1];
-                b_pipe[i] <= b_pipe[i-1];
-                valid_pipe[i] <= valid_pipe[i-1];
-                sum_pipe[i] <= sum_pipe[i-1] + pp[i-1];
+                    
+            for(i=0;i<STAGE_NUM;i=i+1) begin
+                // Booth-4编码
+                if(2*i+2 < 24)
+                    booth_code[2] = a_pipe[i][2*i+2];
+                else
+                    booth_code[2] = a_pipe[i][23];
+                if(2*i+1 < 24)
+                    booth_code[1] = a_pipe[i][2*i+1];
+                else
+                    booth_code[1] = a_pipe[i][23];
+                if(2*i < 24)
+                    booth_code[0] = a_pipe[i][2*i];
+                else
+                    booth_code[0] = a_pipe[i][23];
+
+                b_ext = {b_pipe[i][23], b_pipe[i], 2'b00};
+
+                if(booth_code == 3'b000 || booth_code == 3'b111)
+                    booth_pp = 48'd0;
+                else if(booth_code == 3'b001 || booth_code == 3'b010)
+                    booth_pp = $signed(b_ext) <<< (2*i);
+                else if(booth_code == 3'b011)
+                    booth_pp = $signed(b_ext << 1) <<< (2*i);
+                else if(booth_code == 3'b100)
+                    booth_pp = -($signed(b_ext << 1) <<< (2*i));
+                else if(booth_code == 3'b101 || booth_code == 3'b110)
+                    booth_pp = -($signed(b_ext) <<< (2*i));
+                else
+                    booth_pp = 48'd0;
+
+                a_pipe[i+1] <= a_pipe[i];
+                b_pipe[i+1] <= b_pipe[i];
+                acc_pipe[i+1] <= acc_pipe[i] + booth_pp;
+                valid_pipe[i+1] <= valid_pipe[i];
             end
+
         end
     end
 
-    // ----------- booth_bits安全提取 -----------
-    always @(*) begin
-        for (j = 0; j < 12; j = j + 1) begin
-            booth_bits[j][2] = (2*j+2 < 24) ? a_pipe[j][2*j+2] : 1'b0;
-            booth_bits[j][1] = (2*j+1 < 24) ? a_pipe[j][2*j+1] : 1'b0;
-            booth_bits[j][0] = (2*j   < 24) ? a_pipe[j][2*j  ] : 1'b0;
-        end
-    end
-
-    // ----------- Booth-4部分积生成 -----------
-    genvar k;
-    generate
-        for(k=0;k<12;k=k+1) begin: booth_stage
-            wire signed [25:0] b_ext = {b_pipe[k][23], b_pipe[k], 1'b0, 1'b0};
-            always @(posedge clk or negedge rst_n) begin
-                if(!rst_n) begin
-                    pp[k] <= 48'sd0;
-                end else begin
-                    case(booth_bits[k])
-                        3'b000, 3'b111: pp[k] <= 48'sd0;
-                        3'b001, 3'b010: pp[k] <= b_ext <<< (2*k);
-                        3'b011:         pp[k] <= (b_ext << 1) <<< (2*k);
-                        3'b100:         pp[k] <= -(b_ext << 1) <<< (2*k);
-                        3'b101, 3'b110: pp[k] <= -b_ext <<< (2*k);
-                        default:        pp[k] <= 48'sd0;
-                    endcase
-                end
-            end
-        end
-    endgenerate
-
-    // ----------- 输出部分：Q2.22饱和 -----------
-    wire signed [47:0] mult_res = sum_pipe[12];
-    wire signed [23:0] p_q22 = mult_res[45:22];
-    // Q2.22最大最小
-    localparam signed [23:0] Q22_MAX = 24'sh3FFFFF; // +3.999...
-    localparam signed [23:0] Q22_MIN = -24'sd4194304; // -4.0, 0xC00000
+    wire signed [23:0] p_q22;
+    assign p_q22 = acc_pipe[STAGE_NUM][45:22];
+    localparam signed [23:0] Q22_MAX = 24'sh3FFFFF;
+    localparam signed [23:0] Q22_MIN = -24'sd4194304;
 
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            p <= 24'sd0;
+            p <= 24'd0;
             valid_out <= 1'b0;
-            debug_sum <= 48'sd0;
         end else begin
-            valid_out <= valid_pipe[12];
-            if(mult_res[47:46]==2'b01) begin
+            if (acc_pipe[STAGE_NUM][47:46] == 2'b01)
                 p <= Q22_MAX;
-            end else if(mult_res[47:46]==2'b10) begin
+            else if (acc_pipe[STAGE_NUM][47:46] == 2'b10)
                 p <= Q22_MIN;
-            end else begin
+            else
                 p <= p_q22;
-            end
-            debug_sum <= sum_pipe[12];
+            valid_out <= valid_pipe[STAGE_NUM];
         end
     end
 endmodule

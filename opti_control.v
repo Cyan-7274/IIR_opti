@@ -1,15 +1,11 @@
-// 控制模块：负责流水线启动、数据输出有效、存储地址计数等
-// 适配opti_top.v其余接口，Verilog-2001标准，端口与顶层完全一致
-
+// 精准同步、状态机健壮的控制模块
 module opti_control (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         start,
     input  wire         data_in_valid,
-
     input  wire         sos_out_valid,       // 最后一级sos输出数据有效
     input  wire signed [23:0] sos_out_data,  // 最后一级sos输出数据
-
     output reg          filter_done,
     output reg          pipeline_en,
     output reg  [10:0]  addr,
@@ -24,9 +20,7 @@ module opti_control (
     localparam DONE  = 2'd2;
 
     reg [1:0] state, state_nxt;
-
-    // 输入数据总数
-    localparam N = 2048; // 与testbench一致
+    localparam N = 2048;
 
     reg [10:0] in_cnt;    // 输入计数器
     reg [10:0] out_cnt;   // 输出计数器
@@ -52,10 +46,8 @@ module opti_control (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             pipeline_en <= 1'b0;
-        else if (state == RUN)
-            pipeline_en <= 1'b1;
         else
-            pipeline_en <= 1'b0;
+            pipeline_en <= (state == RUN);
     end
 
     // ====== 输入计数器 ======
@@ -64,7 +56,7 @@ module opti_control (
             in_cnt <= 11'd0;
         else if (state == IDLE)
             in_cnt <= 11'd0;
-        else if (state == RUN && data_in_valid && pipeline_en && (in_cnt < N))
+        else if ((state == RUN) && data_in_valid && (in_cnt < N))
             in_cnt <= in_cnt + 1'b1;
     end
 
@@ -74,7 +66,7 @@ module opti_control (
             out_cnt <= 11'd0;
         else if (state == IDLE)
             out_cnt <= 11'd0;
-        else if (state == RUN && sos_out_valid && (out_cnt < N))
+        else if ((state == RUN) && sos_out_valid && (out_cnt < N))
             out_cnt <= out_cnt + 1'b1;
     end
 
@@ -83,7 +75,7 @@ module opti_control (
             addr <= 11'd0;
         else if (state == IDLE)
             addr <= 11'd0;
-        else if (state == RUN && sos_out_valid && (addr < N))
+        else if ((state == RUN) && sos_out_valid && (addr < N))
             addr <= addr + 1'b1;
     end
 
@@ -92,7 +84,7 @@ module opti_control (
         if (!rst_n) begin
             data_out       <= 24'sd0;
             data_out_valid <= 1'b0;
-        end else if (state == RUN && sos_out_valid && (out_cnt < N)) begin
+        end else if ((state == RUN) && sos_out_valid && (out_cnt < N)) begin
             data_out       <= sos_out_data;
             data_out_valid <= 1'b1;
         end else begin
@@ -104,7 +96,7 @@ module opti_control (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             filter_done <= 1'b0;
-        else if (state == RUN && (out_cnt == N))
+        else if ((state == RUN) && (out_cnt == N))
             filter_done <= 1'b1;
         else if (state == IDLE)
             filter_done <= 1'b0;
@@ -114,10 +106,22 @@ module opti_control (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             stable_out <= 1'b0;
-        else if (state == RUN && out_cnt == 0 && sos_out_valid)
+        else if ((state == RUN) && (out_cnt == 0) && sos_out_valid)
             stable_out <= 1'b1;
         else if (state == IDLE)
             stable_out <= 1'b0;
     end
+
+    // ====== ASIC友好调试辅助：建议仿真时加$display ======
+    // synthesis translate_off
+    always @(posedge clk) begin
+        if (state == RUN && in_cnt < N && data_in_valid)
+            $display("INJECT: in_cnt=%0d", in_cnt);
+        if (state == RUN && sos_out_valid && out_cnt < N)
+            $display("OUTPUT: out_cnt=%0d data_out=%h valid=%b", out_cnt, sos_out_data, data_out_valid);
+        if (filter_done)
+            $display("FILTER DONE at time %0t", $time);
+    end
+    // synthesis translate_on
 
 endmodule

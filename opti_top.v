@@ -1,4 +1,3 @@
-// 顶层模块，适配Q2.22格式和新课题参数，4级Chebyshev II IIR滤波器（Verilog-2001标准，声明规范）
 module opti_top (
     input  wire         clk,
     input  wire         rst_n,
@@ -9,12 +8,8 @@ module opti_top (
     output wire [10:0]  addr,
     output wire signed [23:0] data_out,
     output wire         data_out_valid,
-    output wire         stable_out,
-    output wire signed [47:0] dbg_sum_b0_x_0,
-    output wire signed [47:0] dbg_sum_b1_x_0,
-    output wire signed [47:0] dbg_sum_b2_x_0,
-    output wire signed [47:0] dbg_sum_a1_y_0,
-    output wire signed [47:0] dbg_sum_a2_y_0
+    output wire         stable_out
+    // debug_sum相关端口全部去掉
 );
 
     wire pipeline_en;
@@ -31,7 +26,6 @@ module opti_top (
     assign sos_data0  = data_in;
     assign sos_valid0 = data_in_valid && pipeline_en;
 
-
     // 第1级
     opti_coeffs u_coeff0 (.sos_idx(2'd0), .b0(b0_0), .b1(b1_0), .b2(b2_0), .a1(a1_0), .a2(a2_0));
     opti_sos u_sos0 (
@@ -40,13 +34,8 @@ module opti_top (
         .data_in(sos_data0),
         .b0(b0_0), .b1(b1_0), .b2(b2_0), .a1(a1_0), .a2(a2_0),
         .data_valid_out(sos_valid1),
-        .data_out(sos_data1),
-        // debug_sum信号引出
-        .dbg_sum_b0_x(dbg_sum_b0_x_0),
-        .dbg_sum_b1_x(dbg_sum_b1_x_0),
-        .dbg_sum_b2_x(dbg_sum_b2_x_0),
-        .dbg_sum_a1_y(dbg_sum_a1_y_0),
-        .dbg_sum_a2_y(dbg_sum_a2_y_0)
+        .data_out(sos_data1)
+        // debug_sum信号全部删除
     );
     // 第2级
     opti_coeffs u_coeff1 (.sos_idx(2'd1), .b0(b0_1), .b1(b1_1), .b2(b2_1), .a1(a1_1), .a2(a2_1));
@@ -56,8 +45,7 @@ module opti_top (
         .data_in(sos_data1),
         .b0(b0_1), .b1(b1_1), .b2(b2_1), .a1(a1_1), .a2(a2_1),
         .data_valid_out(sos_valid2),
-        .data_out(sos_data2),
-        .dbg_sum_b0_x(), .dbg_sum_b1_x(), .dbg_sum_b2_x(), .dbg_sum_a1_y(), .dbg_sum_a2_y()
+        .data_out(sos_data2)
     );
     // 第3级
     opti_coeffs u_coeff2 (.sos_idx(2'd2), .b0(b0_2), .b1(b1_2), .b2(b2_2), .a1(a1_2), .a2(a2_2));
@@ -67,8 +55,7 @@ module opti_top (
         .data_in(sos_data2),
         .b0(b0_2), .b1(b1_2), .b2(b2_2), .a1(a1_2), .a2(a2_2),
         .data_valid_out(sos_valid3),
-        .data_out(sos_data3),
-        .dbg_sum_b0_x(), .dbg_sum_b1_x(), .dbg_sum_b2_x(), .dbg_sum_a1_y(), .dbg_sum_a2_y()
+        .data_out(sos_data3)
     );
     // 第4级
     opti_coeffs u_coeff3 (.sos_idx(2'd3), .b0(b0_3), .b1(b1_3), .b2(b2_3), .a1(a1_3), .a2(a2_3));
@@ -78,8 +65,7 @@ module opti_top (
         .data_in(sos_data3),
         .b0(b0_3), .b1(b1_3), .b2(b2_3), .a1(a1_3), .a2(a2_3),
         .data_valid_out(sos_valid4),
-        .data_out(sos_data4),
-        .dbg_sum_b0_x(), .dbg_sum_b1_x(), .dbg_sum_b2_x(), .dbg_sum_a1_y(), .dbg_sum_a2_y()
+        .data_out(sos_data4)
     );
 
     opti_control u_ctrl (
