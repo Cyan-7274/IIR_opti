@@ -17,13 +17,7 @@ module tb_opti;
         .data_in(data_in), .data_in_valid(data_in_valid),
         .filter_done(filter_done), .addr(addr),
         .data_out(data_out), .data_out_valid(data_out_valid),
-        .stable_out(stable_out),
-        // debug_sum信号连线
-        .dbg_sum_b0_x_0(dbg_sum_b0_x_0),
-        .dbg_sum_b1_x_0(dbg_sum_b1_x_0),
-        .dbg_sum_b2_x_0(dbg_sum_b2_x_0),
-        .dbg_sum_a1_y_0(dbg_sum_a1_y_0),
-        .dbg_sum_a2_y_0(dbg_sum_a2_y_0)
+        .stable_out(stable_out)
     );
 
     // 时钟
