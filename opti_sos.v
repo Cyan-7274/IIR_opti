@@ -13,7 +13,7 @@ module opti_sos (
     // debug_sum相关端口全部去掉
 );
 
-    localparam MULT_PIPE = 3;
+    localparam MULT_PIPE = 12;
     localparam DLY = 2 + MULT_PIPE;
 
     reg signed [23:0] y1, y2;

@@ -1,4 +1,3 @@
-// Q2.22*Q2.22 Booth-4全流水线乘法器（Verilog-2001标准，无块内声明，每拍一结果）
 module opti_multiplier (
     input  wire         clk,
     input  wire         rst_n,
@@ -50,32 +49,38 @@ module opti_multiplier (
                 else
                     booth_code[0] = a_pipe[i][23];
 
+                // 符号扩展
                 b_ext = {b_pipe[i][23], b_pipe[i], 2'b00};
 
+                // Booth部分积（每次都$signed强制补符号）
                 if(booth_code == 3'b000 || booth_code == 3'b111)
-                    booth_pp = 48'd0;
+                    booth_pp = 48'sd0;
                 else if(booth_code == 3'b001 || booth_code == 3'b010)
                     booth_pp = $signed(b_ext) <<< (2*i);
                 else if(booth_code == 3'b011)
-                    booth_pp = $signed(b_ext << 1) <<< (2*i);
+                    booth_pp = $signed(b_ext <<< 1) <<< (2*i);
                 else if(booth_code == 3'b100)
-                    booth_pp = -($signed(b_ext << 1) <<< (2*i));
+                    booth_pp = -($signed(b_ext <<< 1) <<< (2*i));
                 else if(booth_code == 3'b101 || booth_code == 3'b110)
                     booth_pp = -($signed(b_ext) <<< (2*i));
                 else
-                    booth_pp = 48'd0;
+                    booth_pp = 48'sd0;
 
                 a_pipe[i+1] <= a_pipe[i];
                 b_pipe[i+1] <= b_pipe[i];
                 acc_pipe[i+1] <= acc_pipe[i] + booth_pp;
                 valid_pipe[i+1] <= valid_pipe[i];
             end
-
         end
     end
 
-    wire signed [23:0] p_q22;
-    assign p_q22 = acc_pipe[STAGE_NUM][45:22];
+    // 输出部分
+    wire signed [47:0] acc_final;
+    assign acc_final = acc_pipe[STAGE_NUM];
+
+    wire signed [25:0] prod_q22;  // 多2位做溢出判断
+    assign prod_q22 = acc_final >>> 23;
+
     localparam signed [23:0] Q22_MAX = 24'sh3FFFFF;
     localparam signed [23:0] Q22_MIN = -24'sd4194304;
 
@@ -84,12 +89,13 @@ module opti_multiplier (
             p <= 24'd0;
             valid_out <= 1'b0;
         end else begin
-            if (acc_pipe[STAGE_NUM][47:46] == 2'b01)
+            // 饱和判断用prod_q22再比较
+            if (prod_q22 > Q22_MAX)
                 p <= Q22_MAX;
-            else if (acc_pipe[STAGE_NUM][47:46] == 2'b10)
+            else if (prod_q22 < Q22_MIN)
                 p <= Q22_MIN;
             else
-                p <= p_q22;
+                p <= prod_q22[23:0];
             valid_out <= valid_pipe[STAGE_NUM];
         end
     end

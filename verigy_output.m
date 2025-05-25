@@ -1,4 +1,4 @@
-
+clear;close all; clc
 % 对比RTL仿真输出与Matlab定点参考输出
 N = 2048;
 
