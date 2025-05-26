@@ -1,43 +1,53 @@
-%% 1. 加载滤波器系数
-load adc_cheby2_iir.mat  % 必须有sos_fixed, wl, fl
-
+clear; close all; clc
+%% 多段激励信号（脉冲/阶跃/正弦）- 扩展版
+load adc_cheby2_iir.mat
 Fs = 80e6;
-
-%% 2. 生成测试信号（幅值安全）
 N = 2048;
-t = (0:N-1)'/Fs;
-f1 = 10e6; f2 = 18e6; f3 = 28e6;
+x = zeros(N,1);
 
-sig1 = 0.2*sin(2*pi*f1*t);      % 通带内
-sig2 = 0.2*sin(2*pi*f2*t);      % 阻带边缘
-sig3 = 0.1*sin(2*pi*f3*t);      % 阻带外
-step = [zeros(200,1); 0.3*ones(N-200,1)];
-noise = 0.01*randn(N,1);
+% % [1] 单位脉冲
+% x(1) = 1.0;
 
-x = sig1 + sig2 + sig3 + step + noise;
+% % [2] 单位阶跃
+% x(101:250) = 1.0;
 
-% 自动幅值归一化（可选，强制不超1）
-if max(abs(x)) > 1
-    x = x / max(abs(x));
-end
+% [3] 正弦
+f_sin = 10e6;
+t = (0:N-1)' / Fs;
+x = 0.5 * sin(2*pi* f_sin*t + 0.5);
 
-fprintf('最大幅值: %.5f\n', max(abs(x)));
-
-%% 3. Q2.22定点量化（输入/输出），并饱和
+% Q2.22量化和输出部分同前...
 scale = 2^22;
 x_q22 = round(x * scale);
-x_q22 = min(max(x_q22, -2^23), 2^23-1);  % 饱和到Q2.22范围
+x_q22 = min(max(x_q22, -2^23), 2^23-1);
 x_q22 = int32(x_q22);
 
 y_ref = sosfilt(sos_fixed, x);
+
+x_stage = double(x);
+y_stage_all = zeros(length(x), size(sos_fixed,1));
+for k = 1:size(sos_fixed,1)
+    b = sos_fixed(k,1:3);
+    a = [1 sos_fixed(k,5:6)];
+    x_stage = filter(b, a, x_stage);
+    x_stage = round(x_stage * scale);
+    x_stage = min(max(x_stage, -2^23), 2^23-1);
+    x_stage = x_stage / scale;
+    y_stage_all(:,k) = x_stage;
+end
+y_fixed = x_stage;
+
 y_q22 = round(y_ref * scale);
 y_q22 = min(max(y_q22, -2^23), 2^23-1);
 y_q22 = int32(y_q22);
 
-%% 4. HEX文件输出（24bit补码，6位HEX, 大写）
+y_fixed_q22 = round(y_fixed * scale);
+y_fixed_q22 = min(max(y_fixed_q22, -2^23), 2^23-1);
+y_fixed_q22 = int32(y_fixed_q22);
+
 fid = fopen('test_signal.hex','w');
 for k = 1:N
-    val = uint32(typecast(x_q22(k),'uint32'));  % 处理负数补码
+    val = uint32(typecast(x_q22(k),'uint32'));
     val = bitand(val, hex2dec('FFFFFF'));
     fprintf(fid, '%06X\n', val);
 end
@@ -51,10 +61,28 @@ for k = 1:N
 end
 fclose(fid);
 
-%% 5. 可选：直接显示前10个输入/输出样本的十进制与HEX
-disp('样本点预览（十进制/HEX）：');
-for k = 1:10
-    fprintf('IN[%d]: %10d  0x%06X | OUT[%d]: %10d  0x%06X\n', ...
-        k, x_q22(k), bitand(typecast(x_q22(k),'uint32'),hex2dec('FFFFFF')), ...
-        k, y_q22(k), bitand(typecast(y_q22(k),'uint32'),hex2dec('FFFFFF')));
+fid = fopen('fixedpoint_output.hex','w');
+for k = 1:N
+    val = uint32(typecast(y_fixed_q22(k),'uint32'));
+    val = bitand(val, hex2dec('FFFFFF'));
+    fprintf(fid, '%06X\n', val);
 end
+fclose(fid);
+
+% 逐级HEX
+for k = 1:size(y_stage_all,2)
+    fname = sprintf('stage%d_output.hex', k);
+    fid = fopen(fname, 'w');
+    y_stage_q22 = round(y_stage_all(:,k) * scale);
+    y_stage_q22 = min(max(y_stage_q22, -2^23), 2^23-1);
+    y_stage_q22 = int32(y_stage_q22);
+    for n = 1:N
+        val = uint32(typecast(y_stage_q22(n),'uint32'));
+        val = bitand(val, hex2dec('FFFFFF'));
+        fprintf(fid, '%06X\n', val);
+    end
+    fclose(fid);
+end
+
+disp('前20数据');
+disp(x(1:20));
