@@ -13,7 +13,6 @@ Nsig = numel(sig_names);
 first_valid = zeros(Nsig, 1);
 
 for k = 1:Nsig
-    sig = T.(sig_names{k});
     idx = find(abs(sig) > threshold, 1, 'first');
     if isempty(idx)
         first_valid(k) = NaN;
