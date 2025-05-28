@@ -7,21 +7,20 @@ module opti_sos (
     output reg data_valid_out,
     output reg signed [23:0] data_out
 );
-    // 乘法器流水级数
     localparam MULT_PIPE = 12;
 
-    // 差分历史长度
-    reg signed [23:0] x_pipe [0:2];
-    reg signed [23:0] y1_pipe;
-    reg signed [23:0] y2_pipe;
+    // 数据历史pipe
+    reg signed [23:0] x_pipe [0:2];  // x[n], x[n-1], x[n-2]
+    reg signed [23:0] y1_pipe;       // y[n-1]
+    reg signed [23:0] y2_pipe;       // y[n-2]
 
-    // data/valid主同步
+    // valid pipeline，仅用于输出gating
     reg [MULT_PIPE:0] valid_pipe;
 
     // feedback寄存器
     reg signed [23:0] y1_reg, y2_reg;
 
-    // 乘法器输出
+    // 乘法器输出和valid
     wire signed [23:0] p_b0_x, p_b1_x, p_b2_x, p_a1_y, p_a2_y;
     wire v_b0_x, v_b1_x, v_b2_x, v_a1_y, v_a2_y;
     wire v_all_valid;
@@ -63,15 +62,19 @@ module opti_sos (
             y2_pipe <= y1_pipe;
             y1_pipe <= y1_reg;
 
-            // valid信号推进，与乘法器流水线同步
+            // valid主链
             valid_pipe <= {valid_pipe[MULT_PIPE-1:0], data_valid_in};
 
-            // 输出/反馈更新
+            // *** 反馈寄存器推进：只需主链valid即可 ***
+            if (valid_pipe[MULT_PIPE]) begin
+                y2_reg <= y1_reg;
+                y1_reg <= saturate_q22(acc_sum);
+            end
+
+            // *** 输出推进：可继续gating所有乘法器输出 ***
             if (v_all_valid) begin
                 data_out <= saturate_q22(acc_sum);
                 data_valid_out <= 1'b1;
-                y2_reg <= y1_reg;
-                y1_reg <= saturate_q22(acc_sum);
             end else begin
                 data_valid_out <= 1'b0;
             end

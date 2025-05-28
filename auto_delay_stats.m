@@ -1,5 +1,5 @@
 % 读取csv/波形数据
-filename = 'D:/A_Hesper/IIRfilter/qts/sim/all_sos_full_pipeline.csv';
+filename = 'your_signals.csv';
 T = readtable(filename);
 
 % 用门限自动判定有效点（可换成valid信号判定）
@@ -13,6 +13,7 @@ Nsig = numel(sig_names);
 first_valid = zeros(Nsig, 1);
 
 for k = 1:Nsig
+    sig = T.(sig_names{k});
     idx = find(abs(sig) > threshold, 1, 'first');
     if isempty(idx)
         first_valid(k) = NaN;
