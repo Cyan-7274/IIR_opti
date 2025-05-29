@@ -40,13 +40,11 @@ module tb_opti;
         i = 0;
         j = 0;
 
-
         // 打开文件并写表头
         fd = $fopen("D:/A_Hesper/IIRfilter/qts/tb/rtl_trace.txt", "w");
         if (fd == 0) $display("File open failed!");
-        // 表头字段数 = 33
-        $fwrite(fd, "cycle data_in data_in_valid data_out data_out_valid u_sos0_data_out u_sos0_data_valid_out mul_b0_x_a mul_b0_x_b mul_b0_x_p mul_b1_x_a mul_b1_x_b mul_b1_x_p mul_b2_x_a mul_b2_x_b mul_b2_x_p mul_a1_y_a mul_a1_y_b mul_a1_y_p mul_a2_y_a mul_a2_y_b mul_a2_y_p x_pipe0 x_pipe1 x_pipe2 y1_pipe0 y1_pipe1 y1_pipe2 y2_pipe0 y2_pipe1 y2_pipe2 valid_pipe0 valid_pipe1 valid_pipe2\n");
-
+        // 请根据真实RTL内信号数量调整表头，下方为与strict pipeline RTL一致的表头
+        $fwrite(fd, "cycle data_in data_in_valid data_out data_out_valid u_sos0_data_out u_sos0_data_valid_out mul_b0_x_a mul_b0_x_b mul_b0_x_p mul_b1_x_a mul_b1_x_b mul_b1_x_p mul_b2_x_a mul_b2_x_b mul_b2_x_p mul_a1_y_a mul_a1_y_b mul_a1_y_p mul_a2_y_a mul_a2_y_b mul_a2_y_p x_pipe0 x_pipe1 x_pipe2 y_pipe0 y_pipe1 valid_pipe0 valid_pipe1 valid_pipe2 acc_sum\n");
 
         // 载入激励
         $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
@@ -95,46 +93,41 @@ module tb_opti;
 
     // 信号保存
     always @(posedge clk) begin
-   
-// 数据输出也严格33个%0d
-    $fwrite(fd,
-        "%0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d\n",
-        (^cycle_cnt === 1'bx)        ? 0 : cycle_cnt,
-        (^data_in === 1'bx)          ? 0 : data_in,
-        (^data_in_valid === 1'bx)    ? 0 : data_in_valid,
-        (^data_out === 1'bx)         ? 0 : data_out,
-        (^data_out_valid === 1'bx)   ? 0 : data_out_valid,
-        (^u_top.u_sos0.data_out === 1'bx)           ? 0 : u_top.u_sos0.data_out,
-        (^u_top.u_sos0.data_valid_out === 1'bx)     ? 0 : u_top.u_sos0.data_valid_out,
-        (^u_top.u_sos0.mul_b0_x.a === 1'bx) ? 0 : u_top.u_sos0.mul_b0_x.a,
-        (^u_top.u_sos0.mul_b0_x.b === 1'bx) ? 0 : u_top.u_sos0.mul_b0_x.b,
-        (^u_top.u_sos0.mul_b0_x.p === 1'bx) ? 0 : u_top.u_sos0.mul_b0_x.p,
-        (^u_top.u_sos0.mul_b1_x.a === 1'bx) ? 0 : u_top.u_sos0.mul_b1_x.a,
-        (^u_top.u_sos0.mul_b1_x.b === 1'bx) ? 0 : u_top.u_sos0.mul_b1_x.b,
-        (^u_top.u_sos0.mul_b1_x.p === 1'bx) ? 0 : u_top.u_sos0.mul_b1_x.p,
-        (^u_top.u_sos0.mul_b2_x.a === 1'bx) ? 0 : u_top.u_sos0.mul_b2_x.a,
-        (^u_top.u_sos0.mul_b2_x.b === 1'bx) ? 0 : u_top.u_sos0.mul_b2_x.b,
-        (^u_top.u_sos0.mul_b2_x.p === 1'bx) ? 0 : u_top.u_sos0.mul_b2_x.p,
-        (^u_top.u_sos0.mul_a1_y.a === 1'bx) ? 0 : u_top.u_sos0.mul_a1_y.a,
-        (^u_top.u_sos0.mul_a1_y.b === 1'bx) ? 0 : u_top.u_sos0.mul_a1_y.b,
-        (^u_top.u_sos0.mul_a1_y.p === 1'bx) ? 0 : u_top.u_sos0.mul_a1_y.p,
-        (^u_top.u_sos0.mul_a2_y.a === 1'bx) ? 0 : u_top.u_sos0.mul_a2_y.a,
-        (^u_top.u_sos0.mul_a2_y.b === 1'bx) ? 0 : u_top.u_sos0.mul_a2_y.b,
-        (^u_top.u_sos0.mul_a2_y.p === 1'bx) ? 0 : u_top.u_sos0.mul_a2_y.p,
-        (^u_top.u_sos0.x_pipe[0] === 1'bx)  ? 0 : u_top.u_sos0.x_pipe[0],
-        (^u_top.u_sos0.x_pipe[1] === 1'bx)  ? 0 : u_top.u_sos0.x_pipe[1],
-        (^u_top.u_sos0.x_pipe[2] === 1'bx)  ? 0 : u_top.u_sos0.x_pipe[2],
-        (^u_top.u_sos0.y1_pipe[0] === 1'bx) ? 0 : u_top.u_sos0.y1_pipe[0],
-        (^u_top.u_sos0.y1_pipe[1] === 1'bx) ? 0 : u_top.u_sos0.y1_pipe[1],
-        (^u_top.u_sos0.y1_pipe[2] === 1'bx) ? 0 : u_top.u_sos0.y1_pipe[2],
-        (^u_top.u_sos0.y2_pipe[0] === 1'bx) ? 0 : u_top.u_sos0.y2_pipe[0],
-        (^u_top.u_sos0.y2_pipe[1] === 1'bx) ? 0 : u_top.u_sos0.y2_pipe[1],
-        (^u_top.u_sos0.y2_pipe[2] === 1'bx) ? 0 : u_top.u_sos0.y2_pipe[2],
-        (^u_top.u_sos0.valid_pipe[0] === 1'bx) ? 0 : u_top.u_sos0.valid_pipe[0],
-        (^u_top.u_sos0.valid_pipe[1] === 1'bx) ? 0 : u_top.u_sos0.valid_pipe[1],
-        (^u_top.u_sos0.valid_pipe[2] === 1'bx) ? 0 : u_top.u_sos0.valid_pipe[2]
-    );
+        // 与表头字段严格一一对应
+        $fwrite(fd,
+            "%0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d\n",
+            (^cycle_cnt === 1'bx)        ? 0 : cycle_cnt,
+            (^data_in === 1'bx)          ? 0 : data_in,
+            (^data_in_valid === 1'bx)    ? 0 : data_in_valid,
+            (^data_out === 1'bx)         ? 0 : data_out,
+            (^data_out_valid === 1'bx)   ? 0 : data_out_valid,
+            (^u_top.u_sos0.data_out === 1'bx)           ? 0 : u_top.u_sos0.data_out,
+            (^u_top.u_sos0.data_valid_out === 1'bx)     ? 0 : u_top.u_sos0.data_valid_out,
+            (^u_top.u_sos0.mul_b0_x.a === 1'bx) ? 0 : u_top.u_sos0.mul_b0_x.a,
+            (^u_top.u_sos0.mul_b0_x.b === 1'bx) ? 0 : u_top.u_sos0.mul_b0_x.b,
+            (^u_top.u_sos0.mul_b0_x.p === 1'bx) ? 0 : u_top.u_sos0.mul_b0_x.p,
+            (^u_top.u_sos0.mul_b1_x.a === 1'bx) ? 0 : u_top.u_sos0.mul_b1_x.a,
+            (^u_top.u_sos0.mul_b1_x.b === 1'bx) ? 0 : u_top.u_sos0.mul_b1_x.b,
+            (^u_top.u_sos0.mul_b1_x.p === 1'bx) ? 0 : u_top.u_sos0.mul_b1_x.p,
+            (^u_top.u_sos0.mul_b2_x.a === 1'bx) ? 0 : u_top.u_sos0.mul_b2_x.a,
+            (^u_top.u_sos0.mul_b2_x.b === 1'bx) ? 0 : u_top.u_sos0.mul_b2_x.b,
+            (^u_top.u_sos0.mul_b2_x.p === 1'bx) ? 0 : u_top.u_sos0.mul_b2_x.p,
+            (^u_top.u_sos0.mul_a1_y.a === 1'bx) ? 0 : u_top.u_sos0.mul_a1_y.a,
+            (^u_top.u_sos0.mul_a1_y.b === 1'bx) ? 0 : u_top.u_sos0.mul_a1_y.b,
+            (^u_top.u_sos0.mul_a1_y.p === 1'bx) ? 0 : u_top.u_sos0.mul_a1_y.p,
+            (^u_top.u_sos0.mul_a2_y.a === 1'bx) ? 0 : u_top.u_sos0.mul_a2_y.a,
+            (^u_top.u_sos0.mul_a2_y.b === 1'bx) ? 0 : u_top.u_sos0.mul_a2_y.b,
+            (^u_top.u_sos0.mul_a2_y.p === 1'bx) ? 0 : u_top.u_sos0.mul_a2_y.p,
+            (^u_top.u_sos0.x_pipe[0] === 1'bx)  ? 0 : u_top.u_sos0.x_pipe[0],
+            (^u_top.u_sos0.x_pipe[1] === 1'bx)  ? 0 : u_top.u_sos0.x_pipe[1],
+            (^u_top.u_sos0.x_pipe[2] === 1'bx)  ? 0 : u_top.u_sos0.x_pipe[2],
+            (^u_top.u_sos0.y_pipe[0] === 1'bx)  ? 0 : u_top.u_sos0.y_pipe[0],
+            (^u_top.u_sos0.y_pipe[1] === 1'bx)  ? 0 : u_top.u_sos0.y_pipe[1],
+            (^u_top.u_sos0.valid_pipe[0] === 1'bx) ? 0 : u_top.u_sos0.valid_pipe[0],
+            (^u_top.u_sos0.valid_pipe[1] === 1'bx) ? 0 : u_top.u_sos0.valid_pipe[1],
+            (^u_top.u_sos0.valid_pipe[2] === 1'bx) ? 0 : u_top.u_sos0.valid_pipe[2],
+            (^u_top.u_sos0.acc_sum === 1'bx) ? 0 : u_top.u_sos0.acc_sum
+        );
     end
-
 
 endmodule

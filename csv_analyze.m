@@ -1,9 +1,9 @@
 clear; close all; clc
 
-% 1. 读取文件，使用绝对路径
+% 1. 读取文件
 T = readtable('D:\A_Hesper\IIRfilter\qts\tb\rtl_trace.txt', 'Delimiter', ' ', 'ReadVariableNames', true);
 
-% 2. 信号名集合，严格与表头一致
+% 2. 信号名集合，和表头严格一致
 signals = { ...
     'cycle', ...
     'data_in', ...
@@ -24,17 +24,17 @@ signals = { ...
     };
 
 % 3. 找到data_in首次有效的cycle，作为基准
-base_signal = 'cycle';
+base_signal = 'data_in';
 if ismember(base_signal, T.Properties.VariableNames)
     base_cycle = find(abs(T.(base_signal)) > 0, 1, 'first');
-    base_cycle_num = T.cycle(base_cycle); % 例如7
+    base_cycle_num = T.cycle(base_cycle);
 else
     base_cycle = 1;
     base_cycle_num = 1;
     warning('基准信号未找到，延迟全部相对第一个cycle');
 end
 
-% 4. 理论延迟表，用Map结构，key与signals一致
+% 4. 理论延迟表
 theorydelay_data = containers.Map();
 theorydelay_data('cycle') = -6;
 theorydelay_data('data_in') = 0;
@@ -71,40 +71,37 @@ theorydelay_data('valid_pipe0') = 0;
 theorydelay_data('valid_pipe1') = 1;
 theorydelay_data('valid_pipe2') = 2;
 
-% 5. 主循环，统计每个信号首次有效的cycle和时刻
-delay_table = cell(length(signals), 6);
+% 5. 构造延迟统计表
+delay_table = cell(length(signals), 4);
 delay_table(:,1) = signals';
 
-one_cycle_us = 1; % 1个周期=1us
-
 for i = 1:length(signals)
-    if ismember(signals{i}, T.Properties.VariableNames)
-        sig = T.(signals{i});
+    sig_name = signals{i};
+    % RTL首个有效周期
+    if ismember(sig_name, T.Properties.VariableNames)
+        sig = T.(sig_name);
         idx = find(abs(sig) > 0, 1, 'first');
         if isempty(idx)
             delay_table{i,2} = NaN;
-            delay_table{i,3} = NaN;
-            delay_table{i,4} = NaN;
         else
-            delay_table{i,2} = T.cycle(idx); % 首次有效的cycle值
-            delay_table{i,3} = T.cycle(idx) - base_cycle_num; % Delay_vs_data_in
-            delay_table{i,4} = T.cycle(idx) * one_cycle_us; % 实际时刻(us)
+            delay_table{i,2} = T.cycle(idx); % RTL首个有效周期
         end
     else
         delay_table{i,2} = NaN;
-        delay_table{i,3} = NaN;
-        delay_table{i,4} = NaN;
     end
 
-    if theorydelay_data.isKey(signals{i})
-        delay_table{i,5} = theorydelay_data(signals{i});
-        delay_table{i,6} = (base_cycle_num + theorydelay_data(signals{i})) * one_cycle_us;
+    % 理论首个有效周期
+    if theorydelay_data.isKey(sig_name)
+        delay_table{i,3} = base_cycle_num + theorydelay_data(sig_name);
     else
-        delay_table{i,5} = NaN;
-        delay_table{i,6} = NaN;
+        delay_table{i,3} = NaN;
     end
+
+    % 差异
+    delay_table{i,4} = delay_table{i,2} - delay_table{i,3};
 end
 
 delay_tbl = cell2table(delay_table, ...
-    'VariableNames', {'Signal','RTL_cycle','RTL_Delay','ActualTime_us','TheoryDelay','TheoryTime_us'});
+    'VariableNames', {'Signal','RTL_cycle','TheoryCycle','CycleDiff'});
+
 disp(delay_tbl)
