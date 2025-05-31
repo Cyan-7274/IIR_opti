@@ -1,5 +1,5 @@
 % =========================================================================
-% opti_design.m (增强版)
+% opti_design.m (增强版+群延迟分析)
 % Chebyshev II型8阶 | Q2.22 Verilog工程定点设计
 % =========================================================================
 clear; close all; clc;
@@ -49,7 +49,45 @@ else
     fprintf('>> 累计误差(单位阶跃): %.2e\n', accum_err);
 end
 
-%% [5] 脉冲响应与稳定时间估算
+%% [5] 群延迟分析
+Nfreq = 2048;
+[H, f] = freqz(sos_fixed, 1024, Fs);
+[Gd, f_gd] = grpdelay(sos_fixed, Nfreq, Fs);
+
+% 输出常用分析点的群延迟（采样点）
+freqs_to_report = [Fp, (Fp+Fs1)/2, Fs1];
+fprintf('\n--- 关键频率群延迟分析 ---\n');
+for k = 1:numel(freqs_to_report)
+    [~, idx] = min(abs(f_gd - freqs_to_report(k)));
+    fprintf('  %.1f MHz: 群延迟 %.2f 点\n', freqs_to_report(k)/1e6, Gd(idx));
+end
+
+%% [6] 画图（增强版：群延迟与幅相频响应同窗显示）
+figure('Name','滤波器响应分析');
+subplot(2,2,1);
+plot(f/1e6, 20*log10(abs(H))); grid on;
+xlabel('频率 (MHz)'); ylabel('幅度 (dB)'); title('幅频响应');
+xlim([0, Fs1/1e6*1.2]);
+subplot(2,2,2);
+plot(f/1e6, unwrap(angle(H))*180/pi); grid on;
+xlabel('频率 (MHz)'); ylabel('相位 (°)'); title('相频响应');
+xlim([0, Fs1/1e6*1.2]);
+subplot(2,2,3);
+plot(f_gd/1e6, Gd, 'LineWidth',1.2); grid on;
+xlabel('频率 (MHz)'); ylabel('群延迟 (点)'); title('群延迟');
+xlim([0, Fs1/1e6*1.2]);
+hold on;
+for k = 1:numel(freqs_to_report)
+    [~, idx] = min(abs(f_gd - freqs_to_report(k)));
+    plot(f_gd(idx)/1e6, Gd(idx), 'ro');
+    text(f_gd(idx)/1e6, Gd(idx), sprintf('  %.1fMHz',freqs_to_report(k)/1e6),'Color','r');
+end
+hold off;
+subplot(2,2,4);
+zplane(sos_fixed(:,1:3), [ones(size(sos_fixed,1),1) sos_fixed(:,4:5)]);
+title('零极点图');
+
+figure('Name','单位脉冲响应');
 imp = [1; zeros(511,1)];
 x = imp;
 for k = 1:size(sos_fixed,1)
@@ -69,25 +107,6 @@ if isempty(stable_idx)
 else
     fprintf('>> 脉冲响应稳定点（|幅值|<%.1e）: %d\n',thresh,stable_idx-1);
 end
-
-%% [6] 画图（同原版）
-
-figure('Name','滤波器响应分析');
-subplot(2,2,1);
-[H, f] = freqz(sos_fixed, 1024, Fs);
-plot(f/1e6, 20*log10(abs(H))); grid on;
-xlabel('频率 (MHz)'); ylabel('幅度 (dB)'); title('幅频响应');
-subplot(2,2,2);
-plot(f/1e6, unwrap(angle(H))*180/pi); grid on;
-xlabel('频率 (MHz)'); ylabel('相位 (°)'); title('相频响应');
-subplot(2,2,3);
-grpdelay(sos_fixed, 1024, Fs);
-xlabel('频率 (MHz)'); ylabel('群时延 (点)'); title('群延迟');
-subplot(2,2,4);
-zplane(sos_fixed(:,1:3), [ones(size(sos_fixed,1),1) sos_fixed(:,4:5)]);
-title('零极点图');
-
-figure('Name','单位脉冲响应');
 stem(0:length(resp)-1, resp, 'filled');
 if ~isnan(stable_idx)
     hold on; xline(stable_idx-1, 'r--', sprintf('稳定点%d',stable_idx-1));
@@ -95,8 +114,7 @@ if ~isnan(stable_idx)
 end
 xlabel('采样点'); ylabel('幅度'); title('单位脉冲响应（含稳定时间标注）'); grid on;
 
-%% [7] 工程信息输出（同原版）
-
+%% [7] 工程信息输出
 fprintf('\n=== ADC抗混叠低通IIR滤波器 Q2.22 工程实现 ===\n');
 fprintf('采样率: %.2f MHz\n', Fs/1e6);
 fprintf('通带: %.2f MHz, 阻带: %.2f MHz\n', Fp/1e6, Fs1/1e6);
@@ -130,6 +148,8 @@ for i = 1:length(coeff_int)
 end
 fclose(fid);
 
-save('adc_cheby2_iir.mat', 'sos_fixed', 'wl', 'fl', 'scale', 'N', 'maxpole', 'accum_err');
+% 保存群延迟分析数据
+save('adc_cheby2_iir.mat', 'sos_fixed', 'wl', 'fl', 'scale', 'N', 'maxpole', 'accum_err', ...
+    'Gd', 'f_gd', 'Fp', 'Fs1', 'Fs', 'freqs_to_report');
 
 % ------ END ------

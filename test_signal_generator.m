@@ -1,95 +1,80 @@
 clear; close all; clc
-%% 基本参数与激励
+%% === 加载滤波器参数 ===
 load adc_cheby2_iir.mat
-Fs = 80e6;
-N = 2048;
-x = zeros(N,1);
 
-% [3] 正弦激励
-f_sin = 10e6;
+N = 2048;
+Fs = double(Fs);  % 确保变量类型一致
+f_sin = 8e6;      % 激励频率
+phi = 0.3;        % 可调信号初相位
 t = (0:N-1)' / Fs;
-x = 0.5 * sin(2*pi* f_sin*t + 0.5);
+x = 0.5 * sin(2*pi* f_sin*t + phi);
 
 scale = 2^22;
 x_q22 = round(x * scale);
 x_q22 = min(max(x_q22, -2^23), 2^23-1);
 x_q22 = int32(x_q22);
 
-%% ==== 前馈路径每一级的p理论输出（可选，已注释）====
-% b0 = sos_fixed(1,1);
-% b1 = sos_fixed(1,2);
-% b2 = sos_fixed(1,3);
-% 
-% b0_p_theory = b0 * x;
-% b1_p_theory = b1 * x;
-% b2_p_theory = b2 * x;
-% 
-% b0_p_theory_q22 = round(b0_p_theory * scale);
-% b0_p_theory_q22 = min(max(b0_p_theory_q22, -2^23), 2^23-1);
-% b0_p_theory_q22 = double(b0_p_theory_q22) / scale;
-% 
-% b1_p_theory_q22 = round(b1_p_theory * scale);
-% b1_p_theory_q22 = min(max(b1_p_theory_q22, -2^23), 2^23-1);
-% b1_p_theory_q22 = double(b1_p_theory_q22) / scale;
-% 
-% b2_p_theory_q22 = round(b2_p_theory * scale);
-% b2_p_theory_q22 = min(max(b2_p_theory_q22, -2^23), 2^23-1);
-% b2_p_theory_q22 = double(b2_p_theory_q22) / scale;
-
-%% ==== IIR理论输出 ====
-y_ref = sosfilt(sos_fixed, x);
-
-x_stage = double(x);
-y_stage_all = zeros(length(x), size(sos_fixed,1));
-for k = 1:size(sos_fixed,1)
-    b = sos_fixed(k,1:3);
-    a = [1 sos_fixed(k,5:6)];
-    x_stage = filter(b, a, x_stage);
-    x_stage = round(x_stage * scale);
-    x_stage = min(max(x_stage, -2^23), 2^23-1);
-    x_stage = x_stage / scale;
-    y_stage_all(:,k) = x_stage;
+%% === 保存输入激励为hex文件，供Verilog testbench读取 ===
+hexfile = 'D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex';
+fid = fopen(hexfile, 'w');
+for ii = 1:N
+    val = mod(double(x_q22(ii)), 2^24); 
+    fprintf(fid, '%06x\n', val);
 end
-y_fixed = x_stage;
+fclose(fid);
 
+disp(['输入激励已保存为HEX文件: ', hexfile]);
+
+%% ==== IIR理论输出及各级节点 ====
+% 解析各级中间信号
+y_ref = sosfilt(sos_fixed, x);
 y_q22 = round(y_ref * scale);
 y_q22 = min(max(y_q22, -2^23), 2^23-1);
 y_q22 = int32(y_q22);
 
-y_fixed_q22 = round(y_fixed * scale);
-y_fixed_q22 = min(max(y_fixed_q22, -2^23), 2^23-1);
-y_fixed_q22 = int32(y_fixed_q22);
+% 中间节点信号
+x_sos = zeros(N, 5); % 输入+4级输出
+x_sos(:,1) = x;
+x_sos_q22 = zeros(N, 5, 'int32');
+x_sos_q22(:,1) = x_q22;
 
-%% ==== 反馈路径a1、a2的理论乘法器输出 ====
-a1 = sos_fixed(1,5);
-a2 = sos_fixed(1,6);
+x_stage = x;
+x_stage_q22 = x_q22;
+for k = 1:4
+    x_stage = sosfilt(sos_fixed(k,:), x_stage);
+    x_stage_q22 = round(x_stage * scale);
+    x_stage_q22 = min(max(x_stage_q22, -2^23), 2^23-1);
+    x_stage_q22 = int32(x_stage_q22);
+    x_sos(:,k+1) = x_stage;
+    x_sos_q22(:,k+1) = x_stage_q22;
+end
 
-% 推荐用浮点y_ref，也可用定点y_fixed
-y_theory = y_ref;
+%% ==== 自动分析激励频率下的群延迟 ====
+[~, idx_delay] = min(abs(f_gd - f_sin));
+group_delay = round(Gd(idx_delay)); % 采样点
 
-y_n1 = [0; y_theory(1:end-1)];     % y[n-1]
-y_n2 = [0; 0; y_theory(1:end-2)];  % y[n-2]
-
-a1_p_theory = a1 * y_n1;
-a2_p_theory = a2 * y_n2;
-
-a1_p_theory_q22 = round(a1_p_theory * scale);
-a1_p_theory_q22 = min(max(a1_p_theory_q22, -2^23), 2^23-1);
-a1_p_theory_q22 = double(a1_p_theory_q22) / scale;
-
-a2_p_theory_q22 = round(a2_p_theory * scale);
-a2_p_theory_q22 = min(max(a2_p_theory_q22, -2^23), 2^23-1);
-a2_p_theory_q22 = double(a2_p_theory_q22) / scale;
+fprintf('激励频率%.2fMHz下群延迟为%d点。\n', f_sin/1e6, group_delay);
 
 %% ==== 保存全部参考数据 ====
+csvfile = 'reference_data.csv';
+T = table((0:N-1)', x, x_q22, ...
+    x_sos(:,2), x_sos_q22(:,2), ... % sos0输出
+    x_sos(:,3), x_sos_q22(:,3), ... % sos1输出
+    x_sos(:,4), x_sos_q22(:,4), ... % sos2输出
+    x_sos(:,5), x_sos_q22(:,5), ... % sos3输出
+    y_ref, y_q22, ...
+    'VariableNames', {'cycle','x','x_q22', ...
+    'sos0_out','sos0_out_q22', ...
+    'sos1_out','sos1_out_q22', ...
+    'sos2_out','sos2_out_q22', ...
+    'sos3_out','sos3_out_q22', ...
+    'y_ref','y_q22'});
+writetable(T, csvfile);
+disp(['理论参考数据已保存为: ', csvfile]);
+
+%% === 保存mat文件（含群延迟信息、各中间信号）===
 save('reference_data.mat', ...
     'x', 'x_q22', ...
-    ... % 'b0_p_theory', 'b1_p_theory', 'b2_p_theory', ...
-    ... % 'b0_p_theory_q22', 'b1_p_theory_q22', 'b2_p_theory_q22', ...
+    'x_sos', 'x_sos_q22', ...
     'y_ref', 'y_q22', ...
-    'y_fixed', 'y_fixed_q22', ...
-    'y_stage_all', 'sos_fixed', 'scale', ...
-    'a1', 'a2', ...
-    'a1_p_theory', 'a2_p_theory', ...
-    'a1_p_theory_q22', 'a2_p_theory_q22');
-
+    'sos_fixed', 'scale', 'f_sin', 'group_delay');

@@ -1,96 +1,50 @@
-clear; close all; clc;
+% 自动对齐并对比RTL与Matlab的输出误差、溢出检测
+clear; close all; clc
 
-Q = 2^22;
-rtl_file = 'D:/A_Hesper/IIRfilter/qts/tb/rtl_trace.txt';
-ref_file = 'reference_data.csv';
-mat_file = 'reference_data.mat';
+% 1. 读取RTL和matlab参考输出
+rtltable = readtable('D:\A_Hesper\IIRfilter\qts\tb\rtl_trace.txt', 'Delimiter', ' ', 'ReadVariableNames', true);
+mat = load('D:\A_Hesper\IIRfilter\qts\sim\reference_data.mat'); % 假设有matlab参考数据
 
-% 读取RTL输出
-T_rtl = readtable(rtl_file, 'Delimiter', ' ', 'MultipleDelimsAsOne', true);
+% 2. 获取有效数据（以data_out_valid对齐）
+valid_idx = find(rtltable.data_out_valid ~= 0);
+rtl_data = double(rtltable.data_out(valid_idx));
+rtl_cycle = rtltable.cycle(valid_idx);
 
-% 读取matlab理论输出
-T_ref = readtable(ref_file);
-load(mat_file, 'group_delay');
-group_delay = group_delay;
+% 3. Matlab数据对齐（如需要可加延迟补偿）
+matlab_data = double(mat.y_q22(1:length(rtl_data))); % 假设matlab输出变量为y_q22
 
-cycle = T_rtl.cycle;
-data_out = double(T_rtl.data_out) / Q;
-data_out_valid = logical(T_rtl.data_out_valid);
+% 4. 误差计算
+diff = rtl_data - matlab_data;
 
-y_q22 = double(T_ref.y_q22) / Q;
+% 5. 溢出点检测
+q22_max = 2^21-1; q22_min = -2^21;
+is_sat = (rtl_data >= q22_max) | (rtl_data <= q22_min);
 
-N = min(length(data_out), length(y_q22));
-cycle = cycle(1:N);
-data_out = data_out(1:N);
-data_out_valid = data_out_valid(1:N);
-y_q22 = y_q22(1:N);
-
-% === group delay对齐（忽略前group_delay个点） ===
-aligned_y = nan(N,1);
-for i = group_delay+1:N
-    aligned_y(i) = y_q22(i - group_delay);
-end
-
-% 只分析对齐后100个点（且必须有效）
-first_valid = find(data_out_valid, 1, 'first');
-start_idx = max(group_delay+1, first_valid);
-window_len = 500;
-idx_range = start_idx : min(start_idx + window_len - 1, N);
-
-window_cycle = cycle(idx_range);
-window_data_out = data_out(idx_range);
-window_aligned_y = aligned_y(idx_range);
-window_valid = data_out_valid(idx_range) & ~isnan(window_aligned_y);
-
-window_error = window_data_out - window_aligned_y;
-window_error_valid = window_error(window_valid);
-
-% 标注点
-[~, max_err_idx_rel] = max(abs(window_error_valid));
-valid_indices = find(window_valid);
-if ~isempty(valid_indices)
-    max_err_idx = idx_range(valid_indices(max_err_idx_rel));
-else
-    max_err_idx = NaN;
-end
-
-figure('Name','RTL输出 vs Matlab理论输出（群延迟对齐）');
+% 6. 绘制对比
+figure;
 subplot(2,1,1);
-plot(window_cycle, window_data_out, 'r', 'LineWidth', 1.2); hold on;
-plot(window_cycle, window_aligned_y, 'k--', 'LineWidth', 1.2);
-
-plot(cycle(first_valid), data_out(first_valid), 'go', 'MarkerFaceColor','g', 'DisplayName','first valid');
-text(cycle(first_valid), data_out(first_valid), '  first valid', 'Color','g', 'FontSize',9, 'VerticalAlignment','bottom');
-plot(cycle(start_idx), data_out(start_idx), 'mo', 'MarkerFaceColor','m', 'DisplayName','group delay');
-text(cycle(start_idx), data_out(start_idx), '  group delay', 'Color','m', 'FontSize',9, 'VerticalAlignment','top');
-if ~isnan(max_err_idx)
-    plot(cycle(max_err_idx), data_out(max_err_idx), 'bs', 'MarkerFaceColor','b', 'DisplayName','max error');
-    text(cycle(max_err_idx), data_out(max_err_idx), '  max error', 'Color','b', 'FontSize',9, 'VerticalAlignment','bottom');
-end
-
-legend('RTL data\_out','Matlab y\_q22','Location','best');
+plot(rtl_cycle, rtl_data/2^22, 'r'); hold on;
+plot(rtl_cycle, matlab_data/2^22, 'k--');
+legend('RTL data\_out','Matlab y\_q22');
 xlabel('Cycle'); ylabel('Q2.22 Value');
-title(sprintf('RTL vs Matlab, 群延迟对齐(%d点, 窗口%d点)', group_delay, window_len));
-grid on;
+title('RTL vs Matlab 输出对比');
+sat_idx = find(is_sat);
+if ~isempty(sat_idx)
+    plot(rtl_cycle(sat_idx), rtl_data(sat_idx)/2^22, 'bo','MarkerSize',6, 'DisplayName','Saturation');
+end
 
 subplot(2,1,2);
-plot(window_cycle(window_valid), window_error_valid, 'b', 'LineWidth', 1.0); hold on;
-if ~isnan(max_err_idx)
-    plot(cycle(max_err_idx), window_error(cycle(max_err_idx)==window_cycle), 'rs', 'MarkerFaceColor','r');
-    text(cycle(max_err_idx), window_error(cycle(max_err_idx)==window_cycle), '  max error', 'Color','r', 'FontSize',9, 'VerticalAlignment','bottom');
+plot(rtl_cycle, diff/2^22, 'b');
+xlabel('Cycle'); ylabel('误差 (RTL-Matlab)');
+title('输出误差（RTL-Matlab）');
+if ~isempty(sat_idx)
+    hold on; plot(rtl_cycle(sat_idx), diff(sat_idx)/2^22, 'ro','MarkerSize',6);
+    legend('误差','溢出点');
 end
-title('输出误差（RTL - Matlab, 群延迟对齐, 有效区）');
-xlabel('Cycle');
-ylabel('误差');
-grid on;
 
-% 输出统计量
-fprintf('群延迟对齐 = %d点\n', group_delay);
-fprintf('窗口范围: Cycle %d 到 %d\n', window_cycle(1), window_cycle(end));
-fprintf('窗口内: 最大绝对误差: %.3g\n', max(abs(window_error_valid)));
-fprintf('窗口内: 均方误差: %.3g\n', mean(window_error_valid.^2));
-fprintf('窗口内: 平均误差: %.3g\n', mean(window_error_valid));
-if ~isnan(max_err_idx)
-    fprintf('最大误差点: Cycle=%d, RTL=%.4f, Matlab=%.4f, 误差=%.4f\n', ...
-        cycle(max_err_idx), data_out(max_err_idx), aligned_y(max_err_idx), window_error(cycle(max_err_idx)==window_cycle));
+% 7. 输出溢出点和大误差点
+fprintf('最大误差: %.6f (Q2.22)\n', max(abs(diff))/2^22);
+fprintf('溢出点数量: %d/%d\n', sum(is_sat), length(is_sat));
+if sum(is_sat)>0
+    fprintf('溢出点cycle范围: %d ~ %d\n', rtl_cycle(sat_idx(1)), rtl_cycle(sat_idx(end)));
 end
