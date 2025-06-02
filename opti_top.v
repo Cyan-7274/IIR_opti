@@ -1,81 +1,130 @@
 module opti_top (
-    input  wire         clk,
-    input  wire         rst_n,
-    input  wire         start,
+    input  wire               clk,
+    input  wire               rst_n,
     input  wire signed [23:0] data_in,
-    input  wire         data_in_valid,
-    output wire         filter_done,
-    output wire [10:0]  addr,
+    input  wire               data_valid_in,
     output wire signed [23:0] data_out,
-    output wire         data_out_valid,
-    output wire         stable_out
-    // debug_sum相关端口全部去掉
+    output wire               data_valid_out,
+
+    // 便于trace的信号（全部output，供tb采集）
+    output wire signed [23:0] u_sos0_data_in,
+    output wire               u_sos0_data_valid_in,
+    output wire signed [23:0] u_sos0_data_out,
+    output wire               u_sos0_data_valid_out,
+    output wire signed [23:0] u_sos1_data_in,
+    output wire               u_sos1_data_valid_in,
+    output wire signed [23:0] u_sos1_data_out,
+    output wire               u_sos1_data_valid_out,
+    output wire signed [23:0] u_sos2_data_in,
+    output wire               u_sos2_data_valid_in,
+    output wire signed [23:0] u_sos2_data_out,
+    output wire               u_sos2_data_valid_out,
+    output wire signed [23:0] u_sos3_data_in,
+    output wire               u_sos3_data_valid_in,
+    output wire signed [23:0] u_sos3_data_out,
+    output wire               u_sos3_data_valid_out,
+
+    // sos0内部w0~w2
+    output wire signed [23:0] u_sos0_w0,
+    output wire signed [23:0] u_sos0_w1,
+    output wire signed [23:0] u_sos0_w2,
+
+    // sos0的b0乘法器接口
+    output wire signed [23:0] u_sos0_b0_a,
+    output wire signed [23:0] u_sos0_b0_b,
+    output wire signed [23:0] u_sos0_b0_p,
+    output wire               u_sos0_b0_valid_in,
+    output wire               u_sos0_b0_valid_out
 );
 
-    wire pipeline_en;
+    wire signed [23:0] y0, y1, y2, y3;
+    wire vld0, vld1, vld2, vld3;
+    wire [1:0] sos_idx0 = 2'd0, sos_idx1 = 2'd1, sos_idx2 = 2'd2, sos_idx3 = 2'd3;
 
-    wire signed [23:0] sos_data0, sos_data1, sos_data2, sos_data3, sos_data4;
-    wire sos_valid0, sos_valid1, sos_valid2, sos_valid3, sos_valid4;
+    // --- sos0 ---
+    wire signed [23:0] sos0_w0, sos0_w1, sos0_w2;
+    wire signed [23:0] sos0_b0_a, sos0_b0_b, sos0_b0_p;
+    wire sos0_b0_valid_in, sos0_b0_valid_out;
 
-    // 系数信号建议全显式声明
-    wire signed [23:0] b0_0, b1_0, b2_0, a1_0, a2_0;
-    wire signed [23:0] b0_1, b1_1, b2_1, a1_1, a2_1;
-    wire signed [23:0] b0_2, b1_2, b2_2, a1_2, a2_2;
-    wire signed [23:0] b0_3, b1_3, b2_3, a1_3, a2_3;
-
-    assign sos_data0  = data_in;
-    assign sos_valid0 = data_in_valid && pipeline_en;
-
-    // 第1级
-    opti_coeffs u_coeff0 (.sos_idx(2'd0), .b0(b0_0), .b1(b1_0), .b2(b2_0), .a1(a1_0), .a2(a2_0));
     opti_sos u_sos0 (
         .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid0),
-        .data_in(sos_data0),
-        .b0(b0_0), .b1(b1_0), .b2(b2_0), .a1(a1_0), .a2(a2_0),
-        .data_valid_out(sos_valid1),
-        .data_out(sos_data1)
-        // debug_sum信号全部删除
+        .data_in(data_in),
+        .data_valid_in(data_valid_in),
+        .sos_idx(sos_idx0),
+        .data_out(y0),
+        .data_valid_out(vld0),
+        .w0(sos0_w0), .w1(sos0_w1), .w2(sos0_w2),
+
+        // 便于trace的b0接口
+        .b0_a(sos0_b0_a), .b0_b(sos0_b0_b), .b0_p(sos0_b0_p),
+        .b0_valid_in(sos0_b0_valid_in), .b0_valid_out(sos0_b0_valid_out)
     );
-    // 第2级
-    opti_coeffs u_coeff1 (.sos_idx(2'd1), .b0(b0_1), .b1(b1_1), .b2(b2_1), .a1(a1_1), .a2(a2_1));
+    // --- sos1 ---
     opti_sos u_sos1 (
         .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid1),
-        .data_in(sos_data1),
-        .b0(b0_1), .b1(b1_1), .b2(b2_1), .a1(a1_1), .a2(a2_1),
-        .data_valid_out(sos_valid2),
-        .data_out(sos_data2)
+        .data_in(y0),
+        .data_valid_in(vld0),
+        .sos_idx(sos_idx1),
+        .data_out(y1),
+        .data_valid_out(vld1),
+        .w0(), .w1(), .w2(),
+        .b0_a(), .b0_b(), .b0_p(), .b0_valid_in(), .b0_valid_out()
     );
-    // 第3级
-    opti_coeffs u_coeff2 (.sos_idx(2'd2), .b0(b0_2), .b1(b1_2), .b2(b2_2), .a1(a1_2), .a2(a2_2));
+    // --- sos2 ---
     opti_sos u_sos2 (
         .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid2),
-        .data_in(sos_data2),
-        .b0(b0_2), .b1(b1_2), .b2(b2_2), .a1(a1_2), .a2(a2_2),
-        .data_valid_out(sos_valid3),
-        .data_out(sos_data3)
+        .data_in(y1),
+        .data_valid_in(vld1),
+        .sos_idx(sos_idx2),
+        .data_out(y2),
+        .data_valid_out(vld2),
+        .w0(), .w1(), .w2(),
+        .b0_a(), .b0_b(), .b0_p(), .b0_valid_in(), .b0_valid_out()
     );
-    // 第4级
-    opti_coeffs u_coeff3 (.sos_idx(2'd3), .b0(b0_3), .b1(b1_3), .b2(b2_3), .a1(a1_3), .a2(a2_3));
+    // --- sos3 ---
     opti_sos u_sos3 (
         .clk(clk), .rst_n(rst_n),
-        .data_valid_in(sos_valid3),
-        .data_in(sos_data3),
-        .b0(b0_3), .b1(b1_3), .b2(b2_3), .a1(a1_3), .a2(a2_3),
-        .data_valid_out(sos_valid4),
-        .data_out(sos_data4)
+        .data_in(y2),
+        .data_valid_in(vld2),
+        .sos_idx(sos_idx3),
+        .data_out(y3),
+        .data_valid_out(vld3),
+        .w0(), .w1(), .w2(),
+        .b0_a(), .b0_b(), .b0_p(), .b0_valid_in(), .b0_valid_out()
     );
 
-    opti_control u_ctrl (
-        .clk(clk), .rst_n(rst_n), .start(start),
-        .data_in_valid(data_in_valid),
-        .sos_out_valid(sos_valid4),
-        .sos_out_data(sos_data4),
-        .filter_done(filter_done), .pipeline_en(pipeline_en),
-        .addr(addr), .data_out(data_out),
-        .data_out_valid(data_out_valid), .stable_out(stable_out)
-    );
+    assign data_out = y3;
+    assign data_valid_out = vld3;
+
+    // 分别输出每级数据/valid（便于tb采集）
+    assign u_sos0_data_in = data_in;
+    assign u_sos0_data_valid_in = data_valid_in;
+    assign u_sos0_data_out = y0;
+    assign u_sos0_data_valid_out = vld0;
+
+    assign u_sos1_data_in = y0;
+    assign u_sos1_data_valid_in = vld0;
+    assign u_sos1_data_out = y1;
+    assign u_sos1_data_valid_out = vld1;
+
+    assign u_sos2_data_in = y1;
+    assign u_sos2_data_valid_in = vld1;
+    assign u_sos2_data_out = y2;
+    assign u_sos2_data_valid_out = vld2;
+
+    assign u_sos3_data_in = y2;
+    assign u_sos3_data_valid_in = vld2;
+    assign u_sos3_data_out = y3;
+    assign u_sos3_data_valid_out = vld3;
+
+    assign u_sos0_w0 = sos0_w0;
+    assign u_sos0_w1 = sos0_w1;
+    assign u_sos0_w2 = sos0_w2;
+
+    assign u_sos0_b0_a = sos0_b0_a;
+    assign u_sos0_b0_b = sos0_b0_b;
+    assign u_sos0_b0_p = sos0_b0_p;
+    assign u_sos0_b0_valid_in = sos0_b0_valid_in;
+    assign u_sos0_b0_valid_out = sos0_b0_valid_out;
 
 endmodule

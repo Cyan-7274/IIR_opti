@@ -10,8 +10,8 @@ module opti_multiplier (
 
     localparam N = 13;
 
-    // Booth-4流水线寄存器
-    reg  signed [24:0] a_pipe [0:N]; // a扩展位
+    // === 修正：a_pipe宽度为2*N+1=27位 ===
+    reg  signed [26:0] a_pipe [0:N]; // 27位
     reg  signed [23:0] b_pipe [0:N];
     reg  signed [47:0] pp_pipe [0:N]; // 部分积
     reg  signed [47:0] acc_pipe [0:N]; // 累加
@@ -28,7 +28,8 @@ module opti_multiplier (
             acc_pipe[0] <= 0;
             valid_pipe[0] <= 0;
         end else begin
-            a_pipe[0]   <= {a[23], a}; // 25位符号扩展
+            // 27位符号扩展
+            a_pipe[0]   <= { {3{a[23]}}, a }; // a[23]符号扩展3位 + a[23:0] = 27位
             b_pipe[0]   <= b;
             pp_pipe[0]  <= 0;
             acc_pipe[0] <= 0;
@@ -47,7 +48,7 @@ module opti_multiplier (
                 if(k==1)
                     booth_code = {a_pipe[k-1][1:0], 1'b0}; // 第一组特殊
                 else if(k==N)
-                    booth_code = {a_pipe[k-1][24], a_pipe[k-1][24], a_pipe[k-1][23]};
+                    booth_code = {a_pipe[k-1][26], a_pipe[k-1][26], a_pipe[k-1][25]};
                 else
                     booth_code = a_pipe[k-1][2*k+1 -: 3];
 
