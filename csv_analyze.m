@@ -16,35 +16,35 @@ signals = { ...
 % -------------- 读取RTL数据 -----------------
 T = readtable('D:/A_Hesper/IIRfilter/qts/tb/rtl_trace.txt', 'Delimiter', ' ', 'ReadVariableNames', true);
 
-% -------------- 理论延迟表（每级15*1拍，输出寄存器1拍） -----------------
+% -------------- 理论延迟表（每级16*1拍，输出寄存器1拍） -----------------
 theorydelay_data = containers.Map();
-% -------------- 理论延迟表（每级15*1拍，输出寄存器1拍） -----------------
+% -------------- 理论延迟表（每级16*1拍，输出寄存器1拍） -----------------
 theorydelay_data = containers.Map();
 theorydelay_data('data_in') = 0;
 theorydelay_data('data_in_valid') = 0;
 theorydelay_data('u_sos0_data_valid_in') = 0;
 theorydelay_data('u_sos0_data_in') = 0;
 
-theorydelay_data('u_sos0_w0') = 2;  % data_in 有效后第 2 拍
-theorydelay_data('u_sos0_w1') = 3;  % w0 再晚 1 拍
-theorydelay_data('u_sos0_w2') = 4;  % w1 再晚 1 拍
+theorydelay_data('u_sos0_w0') = 1;
+theorydelay_data('u_sos0_w1') = 2;
+theorydelay_data('u_sos0_w2') = 3;
 
-theorydelay_data('u_sos0_data_valid_out') = 15*1;
-theorydelay_data('u_sos0_data_out') = 15*1;
-theorydelay_data('u_sos1_data_valid_in') = 15*1;
-theorydelay_data('u_sos1_data_in') = 15*1;
-theorydelay_data('u_sos1_data_valid_out') = 15*2;
-theorydelay_data('u_sos1_data_out') = 15*2;
-theorydelay_data('u_sos2_data_valid_in') = 15*2;
-theorydelay_data('u_sos2_data_in') = 15*2;
-theorydelay_data('u_sos2_data_valid_out') = 15*3;
-theorydelay_data('u_sos2_data_out') = 15*3;
-theorydelay_data('u_sos3_data_valid_in') = 15*3;
-theorydelay_data('u_sos3_data_in') = 15*3;
-theorydelay_data('u_sos3_data_valid_out') = 15*4;
-theorydelay_data('u_sos3_data_out') = 15*4;
-theorydelay_data('data_out_valid') = 15*4;
-theorydelay_data('data_out') = 15*4;
+theorydelay_data('u_sos0_data_valid_out') = 16*1;
+theorydelay_data('u_sos0_data_out') = 16*1+2;
+theorydelay_data('u_sos1_data_valid_in') = 16*1;
+theorydelay_data('u_sos1_data_in') = 16*1+2;
+theorydelay_data('u_sos1_data_valid_out') = 16*2;
+theorydelay_data('u_sos1_data_out') = 16*2+2;
+theorydelay_data('u_sos2_data_valid_in') = 16*2;
+theorydelay_data('u_sos2_data_in') = 16*2+2;
+theorydelay_data('u_sos2_data_valid_out') = 16*3;
+theorydelay_data('u_sos2_data_out') = 16*3+2;
+theorydelay_data('u_sos3_data_valid_in') = 16*3;
+theorydelay_data('u_sos3_data_in') = 16*3+2;
+theorydelay_data('u_sos3_data_valid_out') = 16*4;
+theorydelay_data('u_sos3_data_out') = 16*4+2;
+theorydelay_data('data_out_valid') = 16*4;
+theorydelay_data('data_out') = 16*4+2;
 
 base_signal = 'data_in';
 if ismember(base_signal, T.Properties.VariableNames)

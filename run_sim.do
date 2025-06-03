@@ -41,21 +41,19 @@ add wave    -hex    sim:/tb_opti/u_top/u_sos0/data_valid_in
 add wave    -hex    sim:/tb_opti/u_top/u_sos0/w0
 add wave    -hex    sim:/tb_opti/u_top/u_sos0/w1
 add wave    -hex    sim:/tb_opti/u_top/u_sos0/w2
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b0_w0/valid_out
+
 add wave    -hex    sim:/tb_opti/u_top/u_sos0/data_out
 add wave    -hex    sim:/tb_opti/u_top/u_sos0/data_valid_out
 
 # 乘法信号（第一节）
 add wave -divider "SOS0_STATE"
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b0_w0/b
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b1_w1/b
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b2_w2/b
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b0_w0/p
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b1_w1/p
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b2_w2/p
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b0_w0/a
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b1_w1/a
-add wave    -hex    sim:/tb_opti/u_top/u_sos0/u_mul_b2_w2/a
+
+# sos0 五个乘法器 a、b、p
+add wave -noupdate tb_opti.u_top.u_sos0.u_mul_b0/a  tb_opti.u_top.u_sos0.u_mul_b0/b  tb_opti.u_top.u_sos0.u_mul_b0/p
+add wave -noupdate tb_opti.u_top.u_sos0.u_mul_b1/a  tb_opti.u_top.u_sos0.u_mul_b1/b  tb_opti.u_top.u_sos0.u_mul_b1/p
+add wave -noupdate tb_opti.u_top.u_sos0.u_mul_b2/a  tb_opti.u_top.u_sos0.u_mul_b2/b  tb_opti.u_top.u_sos0.u_mul_b2/p
+add wave -noupdate tb_opti.u_top.u_sos0.u_mul_a1/a  tb_opti.u_top.u_sos0.u_mul_a1/b  tb_opti.u_top.u_sos0.u_mul_a1/p
+add wave -noupdate tb_opti.u_top.u_sos0.u_mul_a2/a  tb_opti.u_top.u_sos0.u_mul_a2/b  tb_opti.u_top.u_sos0.u_mul_a2/p
 
 add wave -divider "SOS_CHAIN"
 add wave    -hex    sim:/tb_opti/u_top/u_sos1/data_in

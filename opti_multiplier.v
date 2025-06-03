@@ -88,14 +88,15 @@ module opti_multiplier (
     // 输出
     wire signed [47:0] acc_final = acc_pipe[N];
 
+
     // Q4.44到Q2.22，取[45:22]，加舍入
     wire signed [23:0] prod_trunc;
     wire round_bit = acc_final[21];
     assign prod_trunc = acc_final[45:22] + round_bit;
 
     // 饱和
-    localparam signed [23:0] Q22_MAX = 24'h3FFFFF;
-    localparam signed [23:0] Q22_MIN = 24'hC00000;
+    localparam signed [23:0] Q22_MAX = 24'sh3FFFFF;
+    localparam signed [23:0] Q22_MIN = -24'sh400000; // C00000为补码负数
 
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
@@ -111,5 +112,6 @@ module opti_multiplier (
             valid_out <= valid_pipe[N];
         end
     end
+
 
 endmodule

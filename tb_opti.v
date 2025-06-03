@@ -13,8 +13,8 @@ module tb_opti;
     wire u_sos0_data_valid_in, u_sos0_data_valid_out, u_sos1_data_valid_in, u_sos1_data_valid_out;
     wire u_sos2_data_valid_in, u_sos2_data_valid_out, u_sos3_data_valid_in, u_sos3_data_valid_out;
     wire signed [23:0] u_sos0_w0, u_sos0_w1, u_sos0_w2;
-    wire signed [23:0] u_sos0_b0_a, u_sos0_b0_b, u_sos0_b0_p;
-    wire u_sos0_b0_valid_in, u_sos0_b0_valid_out;
+    wire signed [23:0] u_sos0_b0_p, u_sos0_b1_p, u_sos0_b2_p, u_sos0_a1_p, u_sos0_a2_p;
+    wire [14:0]        u_sos0_valid_pipe;
 
     integer i, fd;
     reg [31:0] cycle_cnt;
@@ -50,8 +50,9 @@ module tb_opti;
         .u_sos3_data_valid_out(u_sos3_data_valid_out),
 
         .u_sos0_w0(u_sos0_w0), .u_sos0_w1(u_sos0_w1), .u_sos0_w2(u_sos0_w2),
-        .u_sos0_b0_a(u_sos0_b0_a), .u_sos0_b0_b(u_sos0_b0_b), .u_sos0_b0_p(u_sos0_b0_p),
-        .u_sos0_b0_valid_in(u_sos0_b0_valid_in), .u_sos0_b0_valid_out(u_sos0_b0_valid_out)
+        .u_sos0_b0_p(u_sos0_b0_p), .u_sos0_b1_p(u_sos0_b1_p), .u_sos0_b2_p(u_sos0_b2_p),
+        .u_sos0_a1_p(u_sos0_a1_p), .u_sos0_a2_p(u_sos0_a2_p),
+        .u_sos0_valid_pipe(u_sos0_valid_pipe)
     );
 
     initial begin
@@ -63,7 +64,7 @@ module tb_opti;
         cycle_cnt = 0;
         sample_cnt = 0;
         i = 0;
-        fd = $fopen("D:/A_Hesper/IIRfilter/qts/tb/rtl_trace.txt", "w");
+        fd = $fopen("rtl_trace.txt", "w");
         $fwrite(fd, "cycle data_in data_in_valid ");
         $fwrite(fd, "u_sos0_data_in u_sos0_data_valid_in u_sos0_data_out u_sos0_data_valid_out ");
         $fwrite(fd, "u_sos1_data_in u_sos1_data_valid_in u_sos1_data_out u_sos1_data_valid_out ");
@@ -71,7 +72,8 @@ module tb_opti;
         $fwrite(fd, "u_sos3_data_in u_sos3_data_valid_in u_sos3_data_out u_sos3_data_valid_out ");
         $fwrite(fd, "data_out data_out_valid ");
         $fwrite(fd, "u_sos0_w0 u_sos0_w1 u_sos0_w2 ");
-        $fwrite(fd, "u_sos0_b0_a u_sos0_b0_b u_sos0_b0_p u_sos0_b0_valid_in u_sos0_b0_valid_out\n");
+        $fwrite(fd, "u_sos0_b0_p u_sos0_b1_p u_sos0_b2_p u_sos0_a1_p u_sos0_a2_p ");
+        $fwrite(fd, "u_sos0_valid_pipe\n");
 
         $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
 
@@ -111,6 +113,7 @@ module tb_opti;
         $fwrite(fd, "%0d %0d %0d %0d ", u_sos3_data_in, u_sos3_data_valid_in, u_sos3_data_out, u_sos3_data_valid_out);
         $fwrite(fd, "%0d %0d ", data_out, data_out_valid);
         $fwrite(fd, "%0d %0d %0d ", u_sos0_w0, u_sos0_w1, u_sos0_w2);
-        $fwrite(fd, "%0d %0d %0d %0d %0d\n", u_sos0_b0_a, u_sos0_b0_b, u_sos0_b0_p, u_sos0_b0_valid_in, u_sos0_b0_valid_out);
+        $fwrite(fd, "%0d %0d %0d %0d %0d ", u_sos0_b0_p, u_sos0_b1_p, u_sos0_b2_p, u_sos0_a1_p, u_sos0_a2_p);
+        $fwrite(fd, "%0x\n", u_sos0_valid_pipe);
     end
 endmodule
