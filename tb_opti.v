@@ -7,14 +7,12 @@ module tb_opti;
     wire data_out_valid;
     wire signed [23:0] data_out;
 
+    reg [1:0] sos0_idx = 2'd0, sos1_idx = 2'd1, sos2_idx = 2'd2, sos3_idx = 2'd3;
+
     // trace信号
-    wire signed [23:0] u_sos0_data_in, u_sos0_data_out, u_sos1_data_in, u_sos1_data_out;
-    wire signed [23:0] u_sos2_data_in, u_sos2_data_out, u_sos3_data_in, u_sos3_data_out;
-    wire u_sos0_data_valid_in, u_sos0_data_valid_out, u_sos1_data_valid_in, u_sos1_data_valid_out;
-    wire u_sos2_data_valid_in, u_sos2_data_valid_out, u_sos3_data_valid_in, u_sos3_data_valid_out;
-    wire signed [23:0] u_sos0_w0, u_sos0_w1, u_sos0_w2;
-    wire signed [23:0] u_sos0_b0_p, u_sos0_b1_p, u_sos0_b2_p, u_sos0_a1_p, u_sos0_a2_p;
-    wire [14:0]        u_sos0_valid_pipe;
+    wire signed [23:0] w0_0, w1_0, w2_0, b0p_0, b1p_0, b2p_0, a1p_0, a2p_0;
+    wire signed [23:0] data_in0, data_out0;
+    wire data_valid_in0, data_valid_out0;
 
     integer i, fd;
     reg [31:0] cycle_cnt;
@@ -29,30 +27,16 @@ module tb_opti;
         .rst_n(rst_n),
         .data_in(data_in),
         .data_valid_in(data_in_valid),
+        .sos0_idx(sos0_idx),
+        .sos1_idx(sos1_idx),
+        .sos2_idx(sos2_idx),
+        .sos3_idx(sos3_idx),
         .data_out(data_out),
         .data_valid_out(data_out_valid),
-
-        .u_sos0_data_in(u_sos0_data_in),
-        .u_sos0_data_valid_in(u_sos0_data_valid_in),
-        .u_sos0_data_out(u_sos0_data_out),
-        .u_sos0_data_valid_out(u_sos0_data_valid_out),
-        .u_sos1_data_in(u_sos1_data_in),
-        .u_sos1_data_valid_in(u_sos1_data_valid_in),
-        .u_sos1_data_out(u_sos1_data_out),
-        .u_sos1_data_valid_out(u_sos1_data_valid_out),
-        .u_sos2_data_in(u_sos2_data_in),
-        .u_sos2_data_valid_in(u_sos2_data_valid_in),
-        .u_sos2_data_out(u_sos2_data_out),
-        .u_sos2_data_valid_out(u_sos2_data_valid_out),
-        .u_sos3_data_in(u_sos3_data_in),
-        .u_sos3_data_valid_in(u_sos3_data_valid_in),
-        .u_sos3_data_out(u_sos3_data_out),
-        .u_sos3_data_valid_out(u_sos3_data_valid_out),
-
-        .u_sos0_w0(u_sos0_w0), .u_sos0_w1(u_sos0_w1), .u_sos0_w2(u_sos0_w2),
-        .u_sos0_b0_p(u_sos0_b0_p), .u_sos0_b1_p(u_sos0_b1_p), .u_sos0_b2_p(u_sos0_b2_p),
-        .u_sos0_a1_p(u_sos0_a1_p), .u_sos0_a2_p(u_sos0_a2_p),
-        .u_sos0_valid_pipe(u_sos0_valid_pipe)
+        .trace_w0(w0_0), .trace_w1(w1_0), .trace_w2(w2_0),
+        .trace_data_in(data_in0), .trace_data_out(data_out0),
+        .trace_data_valid_in(data_valid_in0), .trace_data_valid_out(data_valid_out0),
+        .trace_b0_p(b0p_0), .trace_b1_p(b1p_0), .trace_b2_p(b2p_0), .trace_a1_p(a1p_0), .trace_a2_p(a2p_0)
     );
 
     initial begin
@@ -65,15 +49,7 @@ module tb_opti;
         sample_cnt = 0;
         i = 0;
         fd = $fopen("rtl_trace.txt", "w");
-        $fwrite(fd, "cycle data_in data_in_valid ");
-        $fwrite(fd, "u_sos0_data_in u_sos0_data_valid_in u_sos0_data_out u_sos0_data_valid_out ");
-        $fwrite(fd, "u_sos1_data_in u_sos1_data_valid_in u_sos1_data_out u_sos1_data_valid_out ");
-        $fwrite(fd, "u_sos2_data_in u_sos2_data_valid_in u_sos2_data_out u_sos2_data_valid_out ");
-        $fwrite(fd, "u_sos3_data_in u_sos3_data_valid_in u_sos3_data_out u_sos3_data_valid_out ");
-        $fwrite(fd, "data_out data_out_valid ");
-        $fwrite(fd, "u_sos0_w0 u_sos0_w1 u_sos0_w2 ");
-        $fwrite(fd, "u_sos0_b0_p u_sos0_b1_p u_sos0_b2_p u_sos0_a1_p u_sos0_a2_p ");
-        $fwrite(fd, "u_sos0_valid_pipe\n");
+        $fwrite(fd, "cycle data_in data_in_valid w0_0 w1_0 w2_0 data_out data_out_valid b0p_0 b1p_0 b2p_0 a1p_0 a2p_0\n");
 
         $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
 
@@ -106,14 +82,7 @@ module tb_opti;
     end
 
     always @(posedge clk) begin
-        $fwrite(fd, "%0d %0d %0d ", cycle_cnt, data_in, data_in_valid);
-        $fwrite(fd, "%0d %0d %0d %0d ", u_sos0_data_in, u_sos0_data_valid_in, u_sos0_data_out, u_sos0_data_valid_out);
-        $fwrite(fd, "%0d %0d %0d %0d ", u_sos1_data_in, u_sos1_data_valid_in, u_sos1_data_out, u_sos1_data_valid_out);
-        $fwrite(fd, "%0d %0d %0d %0d ", u_sos2_data_in, u_sos2_data_valid_in, u_sos2_data_out, u_sos2_data_valid_out);
-        $fwrite(fd, "%0d %0d %0d %0d ", u_sos3_data_in, u_sos3_data_valid_in, u_sos3_data_out, u_sos3_data_valid_out);
-        $fwrite(fd, "%0d %0d ", data_out, data_out_valid);
-        $fwrite(fd, "%0d %0d %0d ", u_sos0_w0, u_sos0_w1, u_sos0_w2);
-        $fwrite(fd, "%0d %0d %0d %0d %0d ", u_sos0_b0_p, u_sos0_b1_p, u_sos0_b2_p, u_sos0_a1_p, u_sos0_a2_p);
-        $fwrite(fd, "%0x\n", u_sos0_valid_pipe);
+        $fwrite(fd, "%0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d\n",
+            cycle_cnt, data_in, data_in_valid, w0_0, w1_0, w2_0, data_out, data_out_valid, b0p_0, b1p_0, b2p_0, a1p_0, a2p_0);
     end
 endmodule
