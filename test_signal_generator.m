@@ -3,22 +3,25 @@ clear; close all; clc
 load adc_cheby2_iir.mat
 
 N = 2048;
-Fs = double(Fs);  % 确保变量类型一致
-f_sin = 8e6;      % 激励频率
-phi = 0.3;        % 可调信号初相位
+Fs = double(Fs);      % 采样率
+f_sin = 12e6;         % 激励频率 (可微调)
+phi = 0.3;            % 初相位
 t = (0:N-1)' / Fs;
 x = 0.5 * sin(2*pi* f_sin*t + phi);
 
-scale = 2^22;
+scale = 2^22;         % Q2.22缩放
 x_q22 = round(x * scale);
 x_q22 = min(max(x_q22, -2^23), 2^23-1);
 x_q22 = int32(x_q22);
 
-%% === 保存输入激励为hex文件，供Verilog testbench读取 ===
-hexfile = 'D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex';
+%% === 保存输入激励为hex文件 ===
+hexfile = 'test_signal.hex';
 fid = fopen(hexfile, 'w');
 for ii = 1:N
-    val = mod(double(x_q22(ii)), 2^24); 
+    val = double(x_q22(ii));
+    if val < 0
+        val = val + 2^24; % 负数转补码
+    end
     fprintf(fid, '%06x\n', val);
 end
 fclose(fid);
@@ -26,13 +29,12 @@ fclose(fid);
 disp(['输入激励已保存为HEX文件: ', hexfile]);
 
 %% ==== IIR理论输出及各级节点 ====
-% 解析各级中间信号
 y_ref = sosfilt(sos_fixed, x);
 y_q22 = round(y_ref * scale);
 y_q22 = min(max(y_q22, -2^23), 2^23-1);
 y_q22 = int32(y_q22);
 
-% 中间节点信号
+% 各级节点
 x_sos = zeros(N, 5); % 输入+4级输出
 x_sos(:,1) = x;
 x_sos_q22 = zeros(N, 5, 'int32');

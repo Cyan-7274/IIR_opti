@@ -1,112 +1,177 @@
 module opti_multiplier (
     input  wire         clk,
     input  wire         rst_n,
-    input  wire signed [23:0] a, // Q2.22
-    input  wire signed [23:0] b, // Q2.22
+    input  wire signed [23:0] a,        // Q2.22
+    input  wire signed [23:0] b,        // Q2.22
     input  wire         valid_in,
-    output reg  signed [23:0] p, // Q2.22
+    output reg  signed [23:0] p,        // Q2.22  
     output reg          valid_out
 );
 
-    // === 参数 ===
-    localparam N = 13;            // 24位输入，Booth-4每2位一组，ceil(24/2)=12组，补1组，共13组
-    localparam A_WIDTH = 24;      // 输入a位宽
-    localparam B_WIDTH = 24;      // 输入b位宽
-    localparam EXT_WIDTH = 27;    // 被乘数扩展到2*N+1=27位
-    localparam PP_WIDTH = 48;     // 部分积宽度，足够累加不溢出
-
-    // === 管脚/寄存器声明 ===
-    reg  signed [EXT_WIDTH-1:0] a_pipe [0:N];
-    reg  signed [B_WIDTH-1:0]   b_pipe [0:N];
-    reg  signed [PP_WIDTH-1:0]  pp_pipe [0:N];
-    reg  signed [PP_WIDTH-1:0]  acc_pipe [0:N];
-    reg                         valid_pipe [0:N];
-
-    reg  [2:0]                  booth_code [0:N-1];
-    reg  signed [PP_WIDTH-1:0]  booth_pp   [0:N-1];
-
-    integer i;
-
-    // === 0级采样 ===
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            a_pipe[0]   <= 0;
-            b_pipe[0]   <= 0;
-            pp_pipe[0]  <= 0;
-            acc_pipe[0] <= 0;
-            valid_pipe[0] <= 1'b0;
-        end else begin
-            a_pipe[0]   <= { {3{a[23]}}, a }; // [26:3]=符号扩展, [2:0]=a
-            b_pipe[0]   <= b;
-            pp_pipe[0]  <= 0;
-            acc_pipe[0] <= 0;
-            valid_pipe[0] <= valid_in;
-        end
-    end
-
-    // === Booth-4流水线推进 ===
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            for (i = 0; i < N; i = i + 1) begin
-                a_pipe[i+1]   <= 0;
-                b_pipe[i+1]   <= 0;
-                pp_pipe[i+1]  <= 0;
-                acc_pipe[i+1] <= 0;
-                valid_pipe[i+1] <= 1'b0;
-                booth_code[i] <= 0;
-                booth_pp[i]   <= 0;
-            end
-        end else begin
-            for (i = 0; i < N; i = i + 1) begin
-                // Booth窗口编码
-                booth_code[i] = { a_pipe[i][2*i+1], a_pipe[i][2*i], (2*i-1 >= 0) ? a_pipe[i][2*i-1] : 1'b0 };
-                // Booth查表
-                case (booth_code[i])
-                    3'b000, 3'b111: booth_pp[i] = {PP_WIDTH{1'b0}};
-                    3'b001, 3'b010: booth_pp[i] = {{(PP_WIDTH-B_WIDTH){b_pipe[i][B_WIDTH-1]}}, b_pipe[i]};
-                    3'b011:         booth_pp[i] = {{(PP_WIDTH-B_WIDTH-1){b_pipe[i][B_WIDTH-1]}}, b_pipe[i], 1'b0}; // +2b
-                    3'b100:         booth_pp[i] = -{{(PP_WIDTH-B_WIDTH-1){b_pipe[i][B_WIDTH-1]}}, b_pipe[i], 1'b0}; // -2b
-                    3'b101, 3'b110: booth_pp[i] = -{{(PP_WIDTH-B_WIDTH){b_pipe[i][B_WIDTH-1]}}, b_pipe[i]};
-                    default:        booth_pp[i] = {PP_WIDTH{1'b0}};
-                endcase
-                // 左移
-                booth_pp[i] = booth_pp[i] <<< (2*i);
-
-                // 流水线推进
-                a_pipe[i+1]   <= a_pipe[i];
-                b_pipe[i+1]   <= b_pipe[i];
-                pp_pipe[i+1]  <= booth_pp[i];
-                acc_pipe[i+1] <= acc_pipe[i] + booth_pp[i];
-                valid_pipe[i+1] <= valid_pipe[i];
-            end
-        end
-    end
-
-    // === 输出 ===
-    wire signed [PP_WIDTH-1:0] acc_final = acc_pipe[N];
-
-    // Q4.44到Q2.22，取[45:22]，加舍入
-    wire signed [23:0] prod_trunc;
-    wire round_bit = acc_final[21];
-    assign prod_trunc = acc_final[45:22] + round_bit;
-
-    // 饱和
     localparam signed [23:0] Q22_MAX = 24'sh3FFFFF;
-    localparam signed [23:0] Q22_MIN = -24'sh400000;
+    localparam signed [23:0] Q22_MIN = 24'hC00000; // -4.0
+
+    // -------- Stage 1: 输入寄存器 --------
+    reg signed [24:0] a_ext_s1;
+    reg signed [23:0] b_s1;
+    reg               valid_s1;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            a_ext_s1 <= 25'd0;
+            b_s1 <= 24'd0;
+            valid_s1 <= 1'b0;
+        end else begin
+            a_ext_s1 <= {a[23], a, 1'b0}; // 符号扩展+最低位补0
+            b_s1 <= b;
+            valid_s1 <= valid_in;
+        end
+    end
+
+    // -------- Stage 2: Booth编码 & 部分积生成 --------
+    wire [2:0] booth_code [0:11];
+    genvar i;
+    generate
+        for (i = 0; i < 12; i = i + 1) begin: BOOTH_CODE
+            assign booth_code[i] = a_ext_s1[2*i+2:2*i];
+        end
+    endgenerate
+
+    wire signed [47:0] pp [0:11];
+    generate
+        for (i = 0; i < 12; i = i + 1) begin: BOOTH_PP
+            wire [2:0] code = booth_code[i];
+            wire signed [47:0] pos_b = {{24{b_s1[23]}}, b_s1} << (2*i);
+            wire signed [47:0] pos_2b = {{23{b_s1[23]}}, b_s1, 1'b0} << (2*i);
+            wire signed [47:0] neg_b = -pos_b;
+            wire signed [47:0] neg_2b = -pos_2b;
+            assign pp[i] = (code == 3'b000 || code == 3'b111) ? 48'd0 :
+                           (code == 3'b001 || code == 3'b010) ? pos_b :
+                           (code == 3'b011)                   ? pos_2b :
+                           (code == 3'b100)                   ? neg_2b :
+                           (code == 3'b101 || code == 3'b110) ? neg_b :
+                           48'd0;
+        end
+    endgenerate
+
+    reg signed [47:0] pp_s2 [0:11];
+    reg               valid_s2;
+    integer j;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            valid_s2 <= 1'b0;
+            for (j = 0; j < 12; j = j + 1) pp_s2[j] <= 48'd0;
+        end else begin
+            valid_s2 <= valid_s1;
+            for (j = 0; j < 12; j = j + 1) pp_s2[j] <= pp[j];
+        end
+    end
+
+    // -------- Stage 3: Wallace树层 --------
+    // 3:2压缩器（标准全加器型）
+    function [1:0] fa;
+        input [47:0] a, b, c;
+        reg [47:0] s;
+        reg [47:0] cy;
+        begin
+            s = a ^ b ^ c;
+            cy = ((a & b) | (b & c) | (a & c)) << 1;
+            fa = {cy, s};
+        end
+    endfunction
+
+    // 第一层: 12→8 (4组3:2)
+    wire signed [47:0] sum1 [0:3], carry1 [0:3];
+    generate
+        for (i = 0; i < 4; i = i + 1) begin: W1
+            assign sum1[i]   = pp_s2[3*i] ^ pp_s2[3*i+1] ^ pp_s2[3*i+2];
+            assign carry1[i] = ((pp_s2[3*i] & pp_s2[3*i+1]) | 
+                                (pp_s2[3*i] & pp_s2[3*i+2]) | 
+                                (pp_s2[3*i+1] & pp_s2[3*i+2])) << 1;
+        end
+    endgenerate
+
+    reg signed [47:0] sum1_s3 [0:3], carry1_s3 [0:3];
+    reg               valid_s3;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            valid_s3 <= 1'b0;
+            for (j = 0; j < 4; j = j + 1) begin
+                sum1_s3[j]   <= 48'd0;
+                carry1_s3[j] <= 48'd0;
+            end
+        end else begin
+            valid_s3 <= valid_s2;
+            for (j = 0; j < 4; j = j + 1) begin
+                sum1_s3[j]   <= sum1[j];
+                carry1_s3[j] <= carry1[j];
+            end
+        end
+    end
+
+    // 第二层: 8→6 (2组3:2, 2直通)
+    wire signed [47:0] sum2 [0:1], carry2 [0:1], pass2 [0:1];
+    assign sum2[0]   = sum1_s3[0] ^ carry1_s3[0] ^ sum1_s3[1];
+    assign carry2[0] = ((sum1_s3[0] & carry1_s3[0]) | (sum1_s3[0] & sum1_s3[1]) | (carry1_s3[0] & sum1_s3[1])) << 1;
+    assign sum2[1]   = carry1_s3[1] ^ sum1_s3[2] ^ carry1_s3[2];
+    assign carry2[1] = ((carry1_s3[1] & sum1_s3[2]) | (carry1_s3[1] & carry1_s3[2]) | (sum1_s3[2] & carry1_s3[2])) << 1;
+    assign pass2[0]  = sum1_s3[3];
+    assign pass2[1]  = carry1_s3[3];
+
+    reg signed [47:0] sum2_s4 [0:1], carry2_s4 [0:1], pass2_s4 [0:1];
+    reg               valid_s4;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            valid_s4 <= 1'b0;
+            sum2_s4[0] <= 48'd0; sum2_s4[1] <= 48'd0;
+            carry2_s4[0] <= 48'd0; carry2_s4[1] <= 48'd0;
+            pass2_s4[0] <= 48'd0; pass2_s4[1] <= 48'd0;
+        end else begin
+            valid_s4 <= valid_s3;
+            sum2_s4[0] <= sum2[0]; sum2_s4[1] <= sum2[1];
+            carry2_s4[0] <= carry2[0]; carry2_s4[1] <= carry2[1];
+            pass2_s4[0] <= pass2[0]; pass2_s4[1] <= pass2[1];
+        end
+    end
+
+    // 第三层: 6→4 (2组3:2)
+    wire signed [47:0] sum3 [0:1], carry3 [0:1];
+    assign sum3[0]   = sum2_s4[0] ^ carry2_s4[0] ^ sum2_s4[1];
+    assign carry3[0] = ((sum2_s4[0] & carry2_s4[0]) | (sum2_s4[0] & sum2_s4[1]) | (carry2_s4[0] & sum2_s4[1])) << 1;
+    assign sum3[1]   = carry2_s4[1] ^ pass2_s4[0] ^ pass2_s4[1];
+    assign carry3[1] = ((carry2_s4[1] & pass2_s4[0]) | (carry2_s4[1] & pass2_s4[1]) | (pass2_s4[0] & pass2_s4[1])) << 1;
+
+    reg signed [47:0] sum3_s5 [0:1], carry3_s5 [0:1];
+    reg               valid_s5;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            valid_s5 <= 1'b0;
+            sum3_s5[0] <= 48'd0; sum3_s5[1] <= 48'd0;
+            carry3_s5[0] <= 48'd0; carry3_s5[1] <= 48'd0;
+        end else begin
+            valid_s5 <= valid_s4;
+            sum3_s5[0] <= sum3[0]; sum3_s5[1] <= sum3[1];
+            carry3_s5[0] <= carry3[0]; carry3_s5[1] <= carry3[1];
+        end
+    end
+
+    // -------- Final: 两级加法器/输出 --------
+    wire [47:0] final_sum = sum3_s5[0] + carry3_s5[0] + sum3_s5[1] + carry3_s5[1];
+
+    wire round_bit = final_sum[21];
+    wire signed [24:0] temp_result = final_sum[45:22] + round_bit;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            p <= 0;
+            p <= 24'd0;
             valid_out <= 1'b0;
         end else begin
-            // 饱和判断：acc_final[47:46] == 01/10
-            if (acc_final[47:46] == 2'b01)
+            valid_out <= valid_s5;
+            if (temp_result > Q22_MAX)
                 p <= Q22_MAX;
-            else if (acc_final[47:46] == 2'b10)
+            else if (temp_result < Q22_MIN)
                 p <= Q22_MIN;
             else
-                p <= prod_trunc;
-                valid_out <= valid_pipe[N];
+                p <= temp_result[23:0];
         end
     end
 
