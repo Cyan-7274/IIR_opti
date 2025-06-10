@@ -1,3 +1,9 @@
+// opti_multiplier.v
+// Q2.22定点24位输入，Booth-4 + Wallace树乘法器，5-6级流水，Verilog-2001标准
+// 输入a,b均为Q2.22格式，输出p为Q2.22，支持饱和与舍入
+
+`timescale 1ns/1ps
+
 module opti_multiplier (
     input  wire         clk,
     input  wire         rst_n,
@@ -8,35 +14,53 @@ module opti_multiplier (
     output reg          valid_out
 );
 
-    localparam signed [23:0] Q22_MAX = 24'sh3FFFFF;
-    localparam signed [23:0] Q22_MIN = 24'hC00000; // -4.0
-
-    // -------- Stage 1: 输入寄存器 --------
+    // -------- 信号声明 --------
     reg signed [24:0] a_ext_s1;
     reg signed [23:0] b_s1;
     reg               valid_s1;
+    wire [2:0] booth_code [0:11];
+    wire signed [47:0] pp [0:11];
+    reg signed [47:0] pp_s2 [0:11];
+    reg               valid_s2;
+    wire signed [47:0] sum1 [0:3], carry1 [0:3];
+    reg signed [47:0] sum1_s3 [0:3], carry1_s3 [0:3];
+    reg               valid_s3;
+    wire signed [47:0] sum2 [0:1], carry2 [0:1], pass2 [0:1];
+    reg signed [47:0] sum2_s4 [0:1], carry2_s4 [0:1], pass2_s4 [0:1];
+    reg               valid_s4;
+    wire signed [47:0] sum3 [0:1], carry3 [0:1];
+    reg signed [47:0] sum3_s5 [0:1], carry3_s5 [0:1];
+    reg               valid_s5;
+    wire [47:0] final_sum;
+    wire round_bit;
+    wire signed [24:0] temp_result;
+    integer j;
+    genvar i;
+
+    // 饱和值
+    wire signed [23:0] Q22_MAX = 24'sh3FFFFF;
+    wire signed [23:0] Q22_MIN = 24'shC00000;
+
+    // -------- Stage 1: 输入寄存器 --------
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a_ext_s1 <= 25'd0;
             b_s1 <= 24'd0;
             valid_s1 <= 1'b0;
         end else begin
-            a_ext_s1 <= {a[23], a, 1'b0}; // 符号扩展+最低位补0
+            a_ext_s1 <= {a[23], a, 1'b0}; // Booth扩展
             b_s1 <= b;
             valid_s1 <= valid_in;
         end
     end
 
     // -------- Stage 2: Booth编码 & 部分积生成 --------
-    wire [2:0] booth_code [0:11];
-    genvar i;
     generate
         for (i = 0; i < 12; i = i + 1) begin: BOOTH_CODE
             assign booth_code[i] = a_ext_s1[2*i+2:2*i];
         end
     endgenerate
 
-    wire signed [47:0] pp [0:11];
     generate
         for (i = 0; i < 12; i = i + 1) begin: BOOTH_PP
             wire [2:0] code = booth_code[i];
@@ -53,9 +77,6 @@ module opti_multiplier (
         end
     endgenerate
 
-    reg signed [47:0] pp_s2 [0:11];
-    reg               valid_s2;
-    integer j;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             valid_s2 <= 1'b0;
@@ -66,21 +87,7 @@ module opti_multiplier (
         end
     end
 
-    // -------- Stage 3: Wallace树层 --------
-    // 3:2压缩器（标准全加器型）
-    function [1:0] fa;
-        input [47:0] a, b, c;
-        reg [47:0] s;
-        reg [47:0] cy;
-        begin
-            s = a ^ b ^ c;
-            cy = ((a & b) | (b & c) | (a & c)) << 1;
-            fa = {cy, s};
-        end
-    endfunction
-
-    // 第一层: 12→8 (4组3:2)
-    wire signed [47:0] sum1 [0:3], carry1 [0:3];
+    // -------- Stage 3: Wallace树层1 --------
     generate
         for (i = 0; i < 4; i = i + 1) begin: W1
             assign sum1[i]   = pp_s2[3*i] ^ pp_s2[3*i+1] ^ pp_s2[3*i+2];
@@ -90,8 +97,6 @@ module opti_multiplier (
         end
     endgenerate
 
-    reg signed [47:0] sum1_s3 [0:3], carry1_s3 [0:3];
-    reg               valid_s3;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             valid_s3 <= 1'b0;
@@ -108,8 +113,7 @@ module opti_multiplier (
         end
     end
 
-    // 第二层: 8→6 (2组3:2, 2直通)
-    wire signed [47:0] sum2 [0:1], carry2 [0:1], pass2 [0:1];
+    // -------- Stage 4: Wallace树层2 --------
     assign sum2[0]   = sum1_s3[0] ^ carry1_s3[0] ^ sum1_s3[1];
     assign carry2[0] = ((sum1_s3[0] & carry1_s3[0]) | (sum1_s3[0] & sum1_s3[1]) | (carry1_s3[0] & sum1_s3[1])) << 1;
     assign sum2[1]   = carry1_s3[1] ^ sum1_s3[2] ^ carry1_s3[2];
@@ -117,8 +121,6 @@ module opti_multiplier (
     assign pass2[0]  = sum1_s3[3];
     assign pass2[1]  = carry1_s3[3];
 
-    reg signed [47:0] sum2_s4 [0:1], carry2_s4 [0:1], pass2_s4 [0:1];
-    reg               valid_s4;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             valid_s4 <= 1'b0;
@@ -133,15 +135,12 @@ module opti_multiplier (
         end
     end
 
-    // 第三层: 6→4 (2组3:2)
-    wire signed [47:0] sum3 [0:1], carry3 [0:1];
+    // -------- Stage 5: Wallace树层3 --------
     assign sum3[0]   = sum2_s4[0] ^ carry2_s4[0] ^ sum2_s4[1];
     assign carry3[0] = ((sum2_s4[0] & carry2_s4[0]) | (sum2_s4[0] & sum2_s4[1]) | (carry2_s4[0] & sum2_s4[1])) << 1;
     assign sum3[1]   = carry2_s4[1] ^ pass2_s4[0] ^ pass2_s4[1];
     assign carry3[1] = ((carry2_s4[1] & pass2_s4[0]) | (carry2_s4[1] & pass2_s4[1]) | (pass2_s4[0] & pass2_s4[1])) << 1;
 
-    reg signed [47:0] sum3_s5 [0:1], carry3_s5 [0:1];
-    reg               valid_s5;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             valid_s5 <= 1'b0;
@@ -154,11 +153,10 @@ module opti_multiplier (
         end
     end
 
-    // -------- Final: 两级加法器/输出 --------
-    wire [47:0] final_sum = sum3_s5[0] + carry3_s5[0] + sum3_s5[1] + carry3_s5[1];
-
-    wire round_bit = final_sum[21];
-    wire signed [24:0] temp_result = final_sum[45:22] + round_bit;
+    // -------- Stage 6: 最终加法器/输出 --------
+    assign final_sum = sum3_s5[0] + carry3_s5[0] + sum3_s5[1] + carry3_s5[1];
+    assign round_bit = final_sum[21];
+    assign temp_result = final_sum[45:22] + round_bit; // Q2.22结果，含舍入
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

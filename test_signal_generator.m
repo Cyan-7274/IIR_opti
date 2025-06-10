@@ -1,20 +1,31 @@
+% =========================================================================
+% test_signal_generator.m (适配新版伺服IIR设计，调试用正弦激励/HEX输入)
+% =========================================================================
 clear; close all; clc
-%% === 加载滤波器参数 ===
-load adc_cheby2_iir.mat
 
-N = 2048;
-Fs = double(Fs);      % 采样率
-f_sin = 12e6;         % 激励频率 (可微调)
-phi = 0.3;            % 初相位
+%% === 加载最新版滤波器设计参数 ===
+matfile = 'servo_iir_design.mat';   % 必须与设计脚本保存一致
+if exist(matfile, 'file')
+    load(matfile);                  % 变量: Fs, fl, sos_fixed 等
+else
+    error('找不到滤波器设计参数文件: %s，请先运行设计脚本生成！', matfile);
+end
+
+%% === 信号参数 (可调试) ===
+N = 256;           % 信号长度(缩小窗口，便于观测)
+Fs = double(Fs);   % 采样率（Hz）
+f_sin = 3e6;       % 正弦频率，建议设在通带内（如4MHz），阻带可试6~7MHz
+phi = 0.3;           % 初相位
+
 t = (0:N-1)' / Fs;
-x = 0.5 * sin(2*pi* f_sin*t + phi);
+x = 0.5 * sin(2*pi*f_sin*t + phi);   % 幅度0.5，避免溢出
 
-scale = 2^22;         % Q2.22缩放
+scale = 2^fl;      % Q2.22缩放，自动与设计参数一致
 x_q22 = round(x * scale);
-x_q22 = min(max(x_q22, -2^23), 2^23-1);
-x_q22 = int32(x_q22);
+x_q22 = min(max(x_q22, -2^23), 2^23-1);  % 饱和到Q2.22范围
+x_q22 = int32(x_q22)
 
-%% === 保存输入激励为hex文件 ===
+%% === 保存HEX激励 ===
 hexfile = 'test_signal.hex';
 fid = fopen(hexfile, 'w');
 for ii = 1:N
@@ -25,58 +36,16 @@ for ii = 1:N
     fprintf(fid, '%06x\n', val);
 end
 fclose(fid);
+fprintf('输入正弦已保存: %s, 频率: %.2f MHz\n', hexfile, f_sin/1e6);
 
-disp(['输入激励已保存为HEX文件: ', hexfile]);
+%% === 可视化检查 ===
+figure;
+subplot(2,1,1); plot(t*1e6, x, 'b'); grid on;
+xlabel('时间 (\mus)'); ylabel('幅度');
+title(sprintf('输入正弦波, f=%.2f MHz', f_sin/1e6));
+xlim([0, max(t)*1e6]); % 缩小窗口
 
-%% ==== IIR理论输出及各级节点 ====
-y_ref = sosfilt(sos_fixed, x);
-y_q22 = round(y_ref * scale);
-y_q22 = min(max(y_q22, -2^23), 2^23-1);
-y_q22 = int32(y_q22);
-
-% 各级节点
-x_sos = zeros(N, 5); % 输入+4级输出
-x_sos(:,1) = x;
-x_sos_q22 = zeros(N, 5, 'int32');
-x_sos_q22(:,1) = x_q22;
-
-x_stage = x;
-x_stage_q22 = x_q22;
-for k = 1:4
-    x_stage = sosfilt(sos_fixed(k,:), x_stage);
-    x_stage_q22 = round(x_stage * scale);
-    x_stage_q22 = min(max(x_stage_q22, -2^23), 2^23-1);
-    x_stage_q22 = int32(x_stage_q22);
-    x_sos(:,k+1) = x_stage;
-    x_sos_q22(:,k+1) = x_stage_q22;
-end
-
-%% ==== 自动分析激励频率下的群延迟 ====
-[~, idx_delay] = min(abs(f_gd - f_sin));
-group_delay = round(Gd(idx_delay)); % 采样点
-
-fprintf('激励频率%.2fMHz下群延迟为%d点。\n', f_sin/1e6, group_delay);
-
-%% ==== 保存全部参考数据 ====
-csvfile = 'reference_data.csv';
-T = table((0:N-1)', x, x_q22, ...
-    x_sos(:,2), x_sos_q22(:,2), ... % sos0输出
-    x_sos(:,3), x_sos_q22(:,3), ... % sos1输出
-    x_sos(:,4), x_sos_q22(:,4), ... % sos2输出
-    x_sos(:,5), x_sos_q22(:,5), ... % sos3输出
-    y_ref, y_q22, ...
-    'VariableNames', {'cycle','x','x_q22', ...
-    'sos0_out','sos0_out_q22', ...
-    'sos1_out','sos1_out_q22', ...
-    'sos2_out','sos2_out_q22', ...
-    'sos3_out','sos3_out_q22', ...
-    'y_ref','y_q22'});
-writetable(T, csvfile);
-disp(['理论参考数据已保存为: ', csvfile]);
-
-%% === 保存mat文件（含群延迟信息、各中间信号）===
-save('reference_data.mat', ...
-    'x', 'x_q22', ...
-    'x_sos', 'x_sos_q22', ...
-    'y_ref', 'y_q22', ...
-    'sos_fixed', 'scale', 'f_sin', 'group_delay');
+subplot(2,1,2); plot(t*1e6, double(x_q22)/scale, 'r');
+xlabel('时间 (\mus)'); ylabel('Q2.22定点值');
+title('Q2.22定点激励信号');
+xlim([0, max(t)*1e6]); % 缩小窗口
