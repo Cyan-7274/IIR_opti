@@ -9,38 +9,46 @@ module opti_sos(
     output reg        valid_out
 );
 
-    // 前馈、反馈pipeline寄存器
-    reg [23:0] data_in_d, x_z1, x_z2, y_z1, y_z2;
+    // 前馈延迟线
+    reg [23:0] data_in_d, x_z1, x_z2;
 
-    // 采样点脉冲打一拍，统一喂乘法器
-    reg valid_in_d;
+    // 反馈延迟线
+    reg [23:0] y_z1, y_z2;
+
+    // valid信号
+    reg        valid_in_d;
+    reg        valid_b0_d; // 延迟一拍，用于反馈延迟线推进
+    wire       valid_b0;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            valid_in_d <= 1'b0;
+            valid_in_d  <= 1'b0;
+            valid_b0_d  <= 1'b0;
         end else begin
-            valid_in_d <= valid_in;
+            valid_in_d  <= valid_in;
+            valid_b0_d  <= valid_b0;
         end
     end
 
-
-    // 延迟线全部T0推进，作为下一个采样点的输入
+    // 前馈延迟线推进（采样点脉冲）
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             data_in_d <= 24'd0;
-            x_z1 <= 24'd0;
-            x_z2 <= 24'd0;
-            y_z1 <= 24'd0;
-            y_z2 <= 24'd0;
+            x_z1      <= 24'd0;
+            x_z2      <= 24'd0;
+            y_z1      <= 24'd0;
+            y_z2      <= 24'd0;
         end else if (valid_in) begin
             data_in_d <= data_in;
-            x_z2 <= x_z1;
-            x_z1 <= data_in_d;
-            y_z2 <= y_z1;
-            y_z1 <= data_out; // feedback用上一个输出
+            x_z2      <= x_z1;
+            x_z1      <= data_in_d;
+            y_z2      <= y_z1;
+            y_z1      <= data_out;
         end
     end
 
-    // 喂乘法器的输入全部用pipeline寄存器
+
+
+    // 乘法器
     wire [23:0] mult0_p, mult1_p, mult2_p, mult3_p, mult4_p;
 
     opti_multiplier u_mult0 (
@@ -89,20 +97,14 @@ module opti_sos(
         .valid_out()
     );
 
-    // 累加输出
+    // 累加输出（乘法器ready时）
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             data_out  <= 24'd0;
-            y_z1      <= 24'd0;
-            y_z2      <= 24'd0;
-            // ... 其它寄存器初始化
             valid_out <= 1'b0;
-        end else if (valid_b0) begin  // 乘法器输出ready
+        end else if (valid_b0) begin
             data_out  <= mult0_p + mult1_p + mult2_p - mult3_p - mult4_p;
             valid_out <= 1'b1;
-            // 延迟线推进，反馈用“刚算出来的本采样点输出”
-            y_z2      <= y_z1;
-            y_z1      <= data_out; // 注意：这里用的上一拍结果，乘法器延迟一拍
         end else begin
             valid_out <= 1'b0;
         end
