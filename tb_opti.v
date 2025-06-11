@@ -11,6 +11,10 @@ module tb_opti;
     reg [31:0] cycle_cnt, sample_cnt;
     localparam N = 2048;
     reg signed [23:0] test_vector [0:N-1];
+    // 采样点计数器
+    localparam SAMP = 10;   // 每10拍一个采样点
+    reg [3:0] samp_cnt;
+    reg [31:0] input_idx;
 
     // 实例化顶层
     opti_top u_top (
@@ -22,7 +26,7 @@ module tb_opti;
         .valid_out(data_out_valid)
     );
 
-    // 150MHz主时钟（6.666ns周期，3.333ns半周期）
+    // 150MHz主时钟
     always #3.333 clk = ~clk;
 
     initial begin
@@ -32,33 +36,32 @@ module tb_opti;
         data_in_valid = 0;
         cycle_cnt = 0;
         sample_cnt = 0;
+        samp_cnt = 0;
+        input_idx = 0;
         i = 0;
         fd = $fopen("rtl_trace.txt", "w");
         $fwrite(fd, "cycle data_in data_in_valid data_out data_out_valid\n");
         $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
 
         #100; rst_n = 1;
-        // 多等几拍，确保复位稳定
         repeat(10) @(posedge clk);
 
-        // 主激励循环
-        for (i = 0; i < N; i = i + 1) begin
-            // 9拍无效
-            repeat(9) begin
-                @(posedge clk);
+        // 主激励循环（采样点计数控制）
+        while (input_idx < N) begin
+            @(posedge clk);
+            if (samp_cnt == SAMP-1) begin
+                data_in_valid <= 1;
+                data_in <= test_vector[input_idx];
+                input_idx <= input_idx + 1;
+                samp_cnt <= 0;
+            end else begin
                 data_in_valid <= 0;
                 data_in <= 24'd0;
+                samp_cnt <= samp_cnt + 1;
             end
-            @(posedge clk);
-            data_in <= test_vector[i];
-            data_in_valid <= 1;
-            @(posedge clk);
-            data_in_valid <= 0; // 只保持一拍
-            data_in <= 24'd0;
         end
         data_in_valid <= 0;
         data_in <= 24'd0;
-        // 多等几十拍，确保流水线完全排空
         repeat(100) @(posedge clk);
         $fclose(fd);
         $display("SIM DONE.");
