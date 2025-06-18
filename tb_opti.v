@@ -2,32 +2,33 @@
 
 module tb_opti;
     reg clk, rst_n;
-    reg signed [23:0] data_in;
+    reg signed [15:0] data_in;
     reg data_in_valid;
     wire data_out_valid;
-    wire signed [23:0] data_out;
+    wire signed [15:0] data_out;
 
     integer i, fd;
     reg [31:0] cycle_cnt, sample_cnt;
     localparam N = 2048;
-    reg signed [23:0] test_vector [0:N-1];
+    reg signed [15:0] test_vector [0:N-1];
     // 采样点计数器
-    localparam SAMP = 10;   // 每10拍一个采样点
-    reg [3:0] samp_cnt;
+    localparam SAMP = 1;   // 每4拍一个采样点（极限全速流水线！）
+    reg [2:0] samp_cnt;
     reg [31:0] input_idx;
 
-    // 实例化顶层
+    // 实例化顶层（Q2.14, 16bit接口）
     opti_top u_top (
-        .clk(clk),
-        .rst_n(rst_n),
-        .data_in(data_in),
-        .valid_in(data_in_valid),
-        .data_out(data_out),
+        .clk      (clk),
+        .rst_n    (rst_n),
+        .data_in  (data_in),
+        .valid_in (data_in_valid),
+        .data_out (data_out),
         .valid_out(data_out_valid)
     );
 
-    // 150MHz主时钟
-    always #3.333 clk = ~clk;
+    // 320MHz主时钟（80MHz采样*4，采样级全速流水线，精确4拍/周期）
+    always #1.25 clk = ~clk;
+    //  always #1.25 clk = ~clk;
 
     initial begin
         clk = 0;
@@ -56,12 +57,12 @@ module tb_opti;
                 samp_cnt <= 0;
             end else begin
                 data_in_valid <= 0;
-                data_in <= 24'd0;
+                data_in <= 16'd0;
                 samp_cnt <= samp_cnt + 1;
             end
         end
         data_in_valid <= 0;
-        data_in <= 24'd0;
+        data_in <= 16'd0;
         repeat(100) @(posedge clk);
         $fclose(fd);
         $display("SIM DONE.");

@@ -1,5 +1,5 @@
-// opti_iir_top.v
-// 顶层IIR滤波器模块：4节流水线二阶节 (SOS)，Q2.22定点，24位输入/输出
+// opti_top.v
+// 顶层IIR滤波器模块：5节流水线二阶节 (SOS)，Q2.14定点，16位输入/输出
 // 依赖：opti_sos.v、opti_multiplier.v、opti_coeffs.v
 // Verilog-2001标准
 
@@ -8,20 +8,20 @@
 module opti_top (
     input  wire         clk,
     input  wire         rst_n,
-    input  wire signed [23:0] data_in,     // Q2.22 输入数据
+    input  wire signed [15:0] data_in,     // Q2.14 输入数据
     input  wire         valid_in,
-    output wire signed [23:0] data_out,    // Q2.22 输出数据
+    output wire signed [15:0] data_out,    // Q2.14 输出数据
     output wire         valid_out
 );
 
     // ------------ 参数定义 --------------
-    localparam NUM_SECTIONS = 4;
+    localparam NUM_SECTIONS = 5;
     localparam COEFFS_PER_SECTION = 5;
     localparam TOTAL_COEFFS = NUM_SECTIONS * COEFFS_PER_SECTION;
 
     // ------------ 系数ROM --------------
-    // 4节，每节5个系数，全部Q2.22格式
-    wire signed [23:0] coeff_rom [0:TOTAL_COEFFS-1];
+    // 5节，每节5个系数，全部Q2.14格式
+    wire signed [15:0] coeff_rom [0:TOTAL_COEFFS-1];
 
     genvar ci;
     generate
@@ -34,7 +34,7 @@ module opti_top (
     endgenerate
 
     // ------------ SOS流水线实例化 -----------
-    wire signed [23:0] sos_data   [0:NUM_SECTIONS];
+    wire signed [15:0] sos_data   [0:NUM_SECTIONS];
     wire               sos_valid  [0:NUM_SECTIONS];
 
     // -- 初始化输入
