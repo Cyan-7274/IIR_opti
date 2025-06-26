@@ -16,7 +16,7 @@ scenarios = [
     struct('name','High-Speed Video','Fs',300e6,'Fp',100e6,'Fs_stop',120e6,'Rp',0.1,'Rs',70,'type','cheby1','min_order',8,'app','视频'),
     struct('name','HiFi Audio DSP','Fs',192e3,'Fp',40e3,'Fs_stop',50e3,'Rp',0.1,'Rs',60,'type','cheby1','min_order',8,'app','音频'),
     struct('name','Cable Modem Frontend','Fs',100e6,'Fp',20e6,'Fs_stop',25e6,'Rp',0.1,'Rs',60,'type','cheby1','min_order',8,'app','Cable Modem'),
-    struct('name','WiFi 6/7 PHY','Fs',80e6,'Fp',20e6,'Fs_stop',25e6,'Rp',0.1,'Rs',60,'type','cheby1','min_order',8,'app','WiFi')
+    struct('name','WiFi 6/7 PHY','Fs',80e6,'Fp',20e6,'Fs_stop',25e6,'Rp',0.1,'Rs',50,'type','cheby1','min_order',8,'app','WiFi')
 ];
 
 % ========== 定点参数 ==========
