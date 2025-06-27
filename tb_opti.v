@@ -1,22 +1,21 @@
 `timescale 1ns/1ps
 
 module tb_opti;
-    reg clk, rst_n;
+    reg clk;
+    reg rst_n;
     reg signed [15:0] data_in;
     reg data_in_valid;
     wire data_out_valid;
     wire signed [15:0] data_out;
 
-    integer i, fd;
-    reg [31:0] cycle_cnt, sample_cnt;
-    localparam N = 2048;
-    reg signed [15:0] test_vector [0:N-1];
-    // 采样点计数器
-    localparam SAMP = 1;   // 每4拍一个采样点（极限全速流水线！）
-    reg [2:0] samp_cnt;
-    reg [31:0] input_idx;
+    integer fd, fd_hex;
+    reg [31:0] cycle_cnt, input_idx;
+    reg signed [15:0] test_vector [0:2047];
+    reg [2:0] gap_cnt; // 0~4, 5拍一采样
 
-    // 实例化顶层（Q2.14, 16bit接口）
+    initial clk = 0;
+    always #1.5625 clk = ~clk;
+
     opti_top u_top (
         .clk      (clk),
         .rst_n    (rst_n),
@@ -26,69 +25,63 @@ module tb_opti;
         .valid_out(data_out_valid)
     );
 
-    // 320MHz主时钟（80MHz采样*4，采样级全速流水线，精确4拍/周期）
-    always #1.25 clk = ~clk;
-    //  always #1.25 clk = ~clk;
-
     initial begin
-        clk = 0;
         rst_n = 0;
-        data_in = 0;
-        data_in_valid = 0;
-        cycle_cnt = 0;
-        sample_cnt = 0;
-        samp_cnt = 0;
-        input_idx = 0;
-        i = 0;
-        fd = $fopen("rtl_trace.txt", "w");
+        data_in = 16'sd0;
+        data_in_valid = 1'b0;
+        cycle_cnt = 32'd0;
+        input_idx = 32'd0;
+        gap_cnt = 3'd0;
+        fd = $fopen("D:/A_Hesper/IIRfilter/qts/tb/rtl_trace.txt", "w");
+        fd_hex = $fopen("D:/A_Hesper/IIRfilter/qts/tb/rtl_output.hex", "w");
         $fwrite(fd, "cycle data_in data_in_valid data_out data_out_valid\n");
         $readmemh("D:/A_Hesper/IIRfilter/qts/sim/test_signal.hex", test_vector);
 
         #100; rst_n = 1;
         repeat(10) @(posedge clk);
 
-        // 主激励循环（采样点计数控制）
-        while (input_idx < N) begin
+        while (input_idx < 2048) begin
             @(posedge clk);
-            if (samp_cnt == SAMP-1) begin
-                data_in_valid <= 1;
+            if (gap_cnt == 3'd0) begin
                 data_in <= test_vector[input_idx];
+                data_in_valid <= 1'b1;
                 input_idx <= input_idx + 1;
-                samp_cnt <= 0;
             end else begin
-                data_in_valid <= 0;
-                data_in <= 16'd0;
-                samp_cnt <= samp_cnt + 1;
+                data_in_valid <= 1'b0;
+                data_in <= 16'sd0;
             end
+            gap_cnt <= gap_cnt + 1'b1;
+            if (gap_cnt == 3'd3)
+                gap_cnt <= 3'd0;
         end
-        data_in_valid <= 0;
-        data_in <= 16'd0;
+
+        @(posedge clk);
+        data_in_valid <= 1'b0;
+        data_in <= 16'sd0;
         repeat(100) @(posedge clk);
         $fclose(fd);
+        $fclose(fd_hex);
         $display("SIM DONE.");
         $finish;
     end
 
-    // 统计周期数
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
-            cycle_cnt <= 0;
+            cycle_cnt <= 32'd0;
         else
             cycle_cnt <= cycle_cnt + 1;
     end
-    // 统计采样数
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
-            sample_cnt <= 0;
-        else if (data_in_valid)
-            sample_cnt <= sample_cnt + 1;
-    end
 
-    // Trace输出（只输出有效输入或输出）
     always @(posedge clk) begin
         if (data_in_valid || data_out_valid) begin
             $fwrite(fd, "%0d %0d %0d %0d %0d\n",
                 cycle_cnt, data_in, data_in_valid, data_out, data_out_valid);
+        end
+        if (data_out_valid) begin
+            if (data_out < 0)
+                $fwrite(fd_hex, "%04X\n", data_out + 16'h10000);
+            else
+                $fwrite(fd_hex, "%04X\n", data_out);
         end
     end
 endmodule
