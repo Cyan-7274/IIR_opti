@@ -1,7 +1,7 @@
 # 高速IIR滤波器时序约束文件（Q1.14/80MHz适配）
 
 # 主时钟周期=12.5ns，80MHz
-create_clock -name clk -period 12.5 [get_ports clk]
+create_clock -name clk -period 3.125 [get_ports clk]
 
 # 复位为异步false path
 set_false_path -from [get_ports rst_n]
