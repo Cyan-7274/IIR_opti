@@ -1,0 +1,1522 @@
+ 
+****************************************
+check_design summary:
+Version:     J-2014.09-SP2
+Date:        Wed Jul 30 23:21:54 2025
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                    400
+    Unconnected ports (LINT-28)                                   400
+
+Cells                                                             400
+    Hier pins without driver and load (LINT-60)                   400
+--------------------------------------------------------------------------------
+
+Warning: In design 'opti_sos_0', port 'b0[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b0[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'b2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_0', port 'a2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b0[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'b2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_1', port 'a2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b0[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'b2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_2', port 'a2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b0[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'b2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_3', port 'a2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b0[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'b2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a1[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[15]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[14]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[13]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[12]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[11]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[10]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[9]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[8]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[7]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[6]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[5]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[4]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[3]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[2]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[1]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_sos_4', port 'a2[0]' is not connected to any nets. (LINT-28)
+Warning: In design 'opti_top', input pin 'b0[15]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[14]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[13]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[12]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[11]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[10]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[9]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[8]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[7]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[6]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[5]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[4]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[3]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[2]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[1]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[0]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[15]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[14]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[13]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[12]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[11]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[10]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[9]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[8]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[7]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[6]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[5]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[4]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[3]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[2]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[1]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[0]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[15]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[14]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[13]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[12]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[11]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[10]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[9]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[8]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[7]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[6]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[5]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[4]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[3]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[2]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[1]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[0]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[15]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[14]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[13]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[12]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[11]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[10]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[9]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[8]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[7]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[6]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[5]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[4]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[3]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[2]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[1]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[0]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[15]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[14]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[13]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[12]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[11]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[10]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[9]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[8]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[7]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[6]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[5]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[4]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[3]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[2]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[1]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[0]' of hierarchical cell 'SOS_CHAIN[0].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[15]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[14]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[13]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[12]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[11]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[10]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[9]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[8]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[7]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[6]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[5]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[4]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[3]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[2]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[1]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[0]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[15]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[14]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[13]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[12]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[11]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[10]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[9]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[8]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[7]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[6]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[5]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[4]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[3]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[2]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[1]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[0]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[15]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[14]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[13]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[12]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[11]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[10]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[9]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[8]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[7]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[6]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[5]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[4]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[3]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[2]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[1]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[0]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[15]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[14]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[13]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[12]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[11]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[10]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[9]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[8]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[7]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[6]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[5]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[4]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[3]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[2]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[1]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[0]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[15]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[14]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[13]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[12]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[11]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[10]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[9]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[8]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[7]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[6]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[5]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[4]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[3]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[2]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[1]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[0]' of hierarchical cell 'SOS_CHAIN[1].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[15]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[14]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[13]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[12]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[11]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[10]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[9]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[8]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[7]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[6]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[5]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[4]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[3]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[2]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[1]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[0]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[15]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[14]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[13]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[12]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[11]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[10]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[9]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[8]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[7]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[6]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[5]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[4]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[3]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[2]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[1]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[0]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[15]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[14]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[13]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[12]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[11]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[10]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[9]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[8]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[7]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[6]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[5]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[4]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[3]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[2]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[1]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[0]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[15]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[14]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[13]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[12]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[11]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[10]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[9]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[8]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[7]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[6]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[5]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[4]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[3]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[2]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[1]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[0]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[15]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[14]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[13]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[12]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[11]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[10]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[9]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[8]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[7]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[6]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[5]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[4]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[3]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[2]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[1]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[0]' of hierarchical cell 'SOS_CHAIN[2].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[15]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[14]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[13]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[12]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[11]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[10]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[9]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[8]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[7]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[6]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[5]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[4]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[3]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[2]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[1]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[0]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[15]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[14]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[13]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[12]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[11]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[10]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[9]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[8]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[7]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[6]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[5]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[4]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[3]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[2]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[1]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[0]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[15]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[14]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[13]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[12]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[11]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[10]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[9]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[8]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[7]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[6]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[5]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[4]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[3]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[2]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[1]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[0]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[15]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[14]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[13]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[12]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[11]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[10]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[9]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[8]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[7]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[6]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[5]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[4]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[3]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[2]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[1]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[0]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[15]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[14]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[13]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[12]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[11]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[10]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[9]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[8]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[7]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[6]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[5]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[4]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[3]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[2]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[1]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[0]' of hierarchical cell 'SOS_CHAIN[3].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[15]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[14]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[13]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[12]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[11]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[10]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[9]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[8]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[7]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[6]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[5]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[4]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[3]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[2]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[1]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b0[0]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[15]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[14]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[13]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[12]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[11]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[10]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[9]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[8]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[7]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[6]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[5]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[4]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[3]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[2]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[1]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b1[0]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[15]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[14]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[13]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[12]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[11]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[10]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[9]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[8]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[7]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[6]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[5]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[4]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[3]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[2]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[1]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'b2[0]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[15]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[14]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[13]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[12]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[11]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[10]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[9]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[8]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[7]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[6]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[5]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[4]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[3]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[2]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[1]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a1[0]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[15]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[14]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[13]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[12]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[11]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[10]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[9]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[8]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[7]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[6]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[5]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[4]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[3]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[2]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[1]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+Warning: In design 'opti_top', input pin 'a2[0]' of hierarchical cell 'SOS_CHAIN[4].u_sos' has no internal loads and is not connected to any nets. (LINT-60)
+1
+ 
+****************************************
+Report : area
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+Library(s) Used:
+
+    CORE65GPSVT (File: /home1/05333msc24/Dissertation/IIR/Library/CORE65GPSVT_nom_1.00V_25C.db)
+
+Number of ports:                           36
+Number of nets:                           504
+Number of cells:                            5
+Number of combinational cells:              0
+Number of sequential cells:                 0
+Number of macros/black boxes:               0
+Number of buf/inv:                          0
+Number of references:                       5
+
+Combinational area:              36453.038977
+Buf/Inv area:                     1306.239952
+Noncombinational area:           34257.598743
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 70710.637721
+Total area:                 undefined
+1
+ 
+****************************************
+Report : design
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+Design allows ideal nets on clock nets.
+
+Library(s) Used:
+
+    CORE65GPSVT (File: /home1/05333msc24/Dissertation/IIR/Library/CORE65GPSVT_nom_1.00V_25C.db)
+
+Local Link Library:
+
+    {CORE65GPSVT_nom_1.00V_25C.db}
+
+Flip-Flop Types:
+
+    No flip-flop types specified.
+
+Latch Types:
+
+    No latch types specified.
+
+Operating Conditions:
+
+
+    Operating Condition Name : nom_1.00V_25C
+    Library : CORE65GPSVT
+    Process :   1.00
+    Temperature :  25.00
+    Voltage :   1.00
+    Interconnect Model : balanced_tree
+
+Wire Loading Model:
+
+    Selected automatically from the total cell area.
+
+Name           :   area_66Kto72K
+Location       :   CORE65GPSVT
+Resistance     :   5.82357
+Capacitance    :   0.8
+Area           :   0
+Slope          :   0.0012053
+Fanout   Length   Points Average Cap Std Deviation
+--------------------------------------------------------------
+     1     0.00
+     2     0.00
+     3     0.00
+     4     0.00
+     5     0.01
+     6     0.01
+     7     0.01
+     8     0.01
+     9     0.01
+    10     0.01
+    11     0.01
+    12     0.01
+    13     0.02
+    14     0.02
+    15     0.02
+
+
+
+Wire Loading Model Mode: enclosed.
+
+Timing Ranges:
+
+    No timing ranges specified.
+
+Pin Input Delays:
+
+    None specified.
+
+Pin Output Delays:
+
+    None specified.
+
+Disabled Timing Arcs:
+
+    No arcs disabled.
+
+Required Licenses:
+
+    None Required
+
+Design Parameters:
+
+    None specified.
+1
+ 
+****************************************
+Report : constraint
+        -all_violators
+        -verbose
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+
+    Net: SOS_CHAIN[2].u_sos/n1554
+
+    max_transition         0.31
+  - Transition Time        0.32
+  ------------------------------
+    Slack                 -0.01  (VIOLATED)
+
+    List of pins on net "SOS_CHAIN[2].u_sos/n1554" with transition violations :
+   -----------------------------------------------------------------
+                             Required        Actual
+                            Transition     Transition       Slack
+   -----------------------------------------------------------------
+       PIN :   SOS_CHAIN[2].u_sos/U1088/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1093/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1096/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1098/A
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1616/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1618/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1620/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1622/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1624/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[2].u_sos/U1626/C
+                                0.31           0.32          -0.01  (VIOLATED)
+
+    Net: SOS_CHAIN[3].u_sos/n1447
+
+    max_transition         0.31
+  - Transition Time        0.32
+  ------------------------------
+    Slack                 -0.01  (VIOLATED)
+
+    List of pins on net "SOS_CHAIN[3].u_sos/n1447" with transition violations :
+   -----------------------------------------------------------------
+                             Required        Actual
+                            Transition     Transition       Slack
+   -----------------------------------------------------------------
+       PIN :   SOS_CHAIN[3].u_sos/U1032/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1038/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1040/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1042/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1044/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1046/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1618/A
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1622/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1624/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[3].u_sos/U1626/C
+                                0.31           0.32          -0.01  (VIOLATED)
+
+    Net: SOS_CHAIN[1].u_sos/n1571
+
+    max_transition         0.31
+  - Transition Time        0.32
+  ------------------------------
+    Slack                 -0.01  (VIOLATED)
+
+    List of pins on net "SOS_CHAIN[1].u_sos/n1571" with transition violations :
+   -----------------------------------------------------------------
+                             Required        Actual
+                            Transition     Transition       Slack
+   -----------------------------------------------------------------
+       PIN :   SOS_CHAIN[1].u_sos/U880/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U886/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U888/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1653/A
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1657/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1659/C
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1661/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1663/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1670/B
+                                0.31           0.32          -0.01  (VIOLATED)
+       PIN :   SOS_CHAIN[1].u_sos/U1672/B
+                                0.31           0.32          -0.01  (VIOLATED)
+
+    Design: opti_top
+
+    max_leakage_power          0.00
+  - Current Leakage Power      0.88
+  ----------------------------------
+    Slack                     -0.88  (VIOLATED)
+
+
+1
+ 
+****************************************
+Report : timing
+        -path end
+        -delay max
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: nom_1.00V_25C   Library: CORE65GPSVT
+Wire Load Model Mode: enclosed
+
+Endpoint                         Path Delay     Path Required     Slack
+------------------------------------------------------------------------
+data_out[12] (out)                  0.06 f        infinity     infinity
+data_out[3] (out)                   0.06 f        infinity     infinity
+data_out[14] (out)                  0.06 f        infinity     infinity
+data_out[13] (out)                  0.06 f        infinity     infinity
+data_out[0] (out)                   0.06 f        infinity     infinity
+data_out[9] (out)                   0.06 f        infinity     infinity
+data_out[8] (out)                   0.06 f        infinity     infinity
+data_out[7] (out)                   0.06 f        infinity     infinity
+data_out[6] (out)                   0.06 f        infinity     infinity
+data_out[5] (out)                   0.06 f        infinity     infinity
+data_out[4] (out)                   0.06 f        infinity     infinity
+data_out[2] (out)                   0.06 f        infinity     infinity
+data_out[1] (out)                   0.06 f        infinity     infinity
+data_out[15] (out)                  0.06 f        infinity     infinity
+data_out[11] (out)                  0.06 f        infinity     infinity
+data_out[10] (out)                  0.06 f        infinity     infinity
+valid_out (out)                     0.05 f        infinity     infinity
+
+1
+ 
+****************************************
+Report : clock_gating
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+
+
+                             Clock Gating Summary
+          ------------------------------------------------------------
+          |    Number of Clock gating elements    |        0         |
+          |                                       |                  |
+          |    Number of Gated registers          |     0 (0.00%)    |
+          |                                       |                  |
+          |    Number of Ungated registers        |  3294 (100.00%)  |
+          |                                       |                  |
+          |    Total number of registers          |     3294         |
+          ------------------------------------------------------------
+
+
+
+1
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+
+Library(s) Used:
+
+    CORE65GPSVT (File: /home1/05333msc24/Dissertation/IIR/Library/CORE65GPSVT_nom_1.00V_25C.db)
+
+
+Operating Conditions: nom_1.00V_25C   Library: CORE65GPSVT
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+opti_top               area_66Kto72K     CORE65GPSVT
+opti_sos_0             area_9Kto12K      CORE65GPSVT
+opti_sos_1             area_12Kto18K     CORE65GPSVT
+opti_sos_2             area_12Kto18K     CORE65GPSVT
+opti_sos_3             area_12Kto18K     CORE65GPSVT
+opti_sos_4             area_12Kto18K     CORE65GPSVT
+
+
+Global Operating Voltage = 1    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1mW
+
+
+  Cell Internal Power  =   2.1630 mW   (99%)
+  Net Switching Power  =  12.1498 uW    (1%)
+                         ---------
+Total Dynamic Power    =   2.1751 mW  (100%)
+
+Cell Leakage Power     = 602.4004 uW
+
+Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           0.0000            0.0000            0.0000            0.0000  (   0.00%)
+sequential         2.1476        3.2948e-03            0.3217            2.4726  (  89.02%)
+combinational  1.5429e-02        8.8550e-03            0.2807            0.3050  (  10.98%)
+--------------------------------------------------------------------------------------------------
+Total              2.1630 mW     1.2150e-02 mW         0.6024 mW         2.7776 mW
+1
+ 
+****************************************
+Report : qor
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+
+  Timing Path Group (none)
+  -----------------------------------
+  Levels of Logic:               0.00
+  Critical Path Length:          0.06
+  Critical Path Slack:         uninit
+  Critical Path Clk Period:       n/a
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:          5
+  Hierarchical Port Count:        580
+  Leaf Cell Count:              11625
+  Buf/Inv Cell Count:             832
+  Buf Cell Count:                  16
+  Inv Cell Count:                 816
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:      8331
+  Sequential Cell Count:         3294
+  Macro Count:                      0
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:    36453.038977
+  Noncombinational Area: 34257.598743
+  Buf/Inv Area:           1306.239952
+  Total Buffer Area:            33.28
+  Total Inverter Area:        1272.96
+  Macro/Black Box Area:      0.000000
+  Net Area:                  0.000000
+  -----------------------------------
+  Cell Area:             70710.637721
+  Design Area:           70710.637721
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:         14099
+  Nets With Violations:             3
+  Max Trans Violations:             3
+  Max Cap Violations:               0
+  -----------------------------------
+
+
+  Hostname: icd3linux03
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                    5.41
+  Logic Optimization:                  5.45
+  Mapping Optimization:               10.25
+  -----------------------------------------
+  Overall Compile Time:               72.94
+  Overall Compile Wall Clock Time:    80.14
+
+  --------------------------------------------------------------------
+
+  Design  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+
+  Design (Hold)  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+  --------------------------------------------------------------------
+
+
+1
+ 
+****************************************
+Report : hierarchy
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+Attributes:
+    r - licensed design
+
+opti_top
+    opti_sos_0                              r
+        HS65_GSS_XNOR2X3          CORE65GPSVT
+        HS65_GSS_XOR2X3           CORE65GPSVT
+        HS65_GSS_XOR3X2           CORE65GPSVT
+        HS65_GS_AND2X4            CORE65GPSVT
+        HS65_GS_AO12X4            CORE65GPSVT
+        HS65_GS_AO112X4           CORE65GPSVT
+        HS65_GS_AOI12X2           CORE65GPSVT
+        HS65_GS_AOI12X3           CORE65GPSVT
+        HS65_GS_AOI13X2           CORE65GPSVT
+        HS65_GS_AOI22X1           CORE65GPSVT
+        HS65_GS_CB4I1X4           CORE65GPSVT
+        HS65_GS_CBI4I1X3          CORE65GPSVT
+        HS65_GS_CBI4I6X2          CORE65GPSVT
+        HS65_GS_DFPRQX4           CORE65GPSVT
+        HS65_GS_FA1X4             CORE65GPSVT
+        HS65_GS_HA1X4             CORE65GPSVT
+        HS65_GS_IVX2              CORE65GPSVT
+        HS65_GS_MUX21I1X3         CORE65GPSVT
+        HS65_GS_MUX21X4           CORE65GPSVT
+        HS65_GS_MUXI21X2          CORE65GPSVT
+        HS65_GS_NAND2X2           CORE65GPSVT
+        HS65_GS_NAND3X2           CORE65GPSVT
+        HS65_GS_NOR2AX3           CORE65GPSVT
+        HS65_GS_NOR2X2            CORE65GPSVT
+        HS65_GS_NOR2X5            CORE65GPSVT
+        HS65_GS_NOR3X1            CORE65GPSVT
+        HS65_GS_OA12X4            CORE65GPSVT
+        HS65_GS_OAI12X3           CORE65GPSVT
+        HS65_GS_OAI13X1           CORE65GPSVT
+        HS65_GS_OAI21X2           CORE65GPSVT
+        HS65_GS_OAI32X2           CORE65GPSVT
+        HS65_GS_OAI112X1          CORE65GPSVT
+        HS65_GS_OR2X4             CORE65GPSVT
+        HS65_GS_PAO2X4            CORE65GPSVT
+        HS65_GS_PAOI2X1           CORE65GPSVT
+    opti_sos_1                              r
+        HS65_GSS_XNOR2X3          CORE65GPSVT
+        HS65_GSS_XNOR2X6          CORE65GPSVT
+        HS65_GSS_XNOR3X2          CORE65GPSVT
+        HS65_GSS_XOR2X3           CORE65GPSVT
+        HS65_GSS_XOR3X2           CORE65GPSVT
+        HS65_GS_AND2X4            CORE65GPSVT
+        HS65_GS_AND3X4            CORE65GPSVT
+        HS65_GS_AO12X4            CORE65GPSVT
+        HS65_GS_AO22X4            CORE65GPSVT
+        HS65_GS_AO31X4            CORE65GPSVT
+        HS65_GS_AO112X4           CORE65GPSVT
+        HS65_GS_AOI12X2           CORE65GPSVT
+        HS65_GS_AOI12X3           CORE65GPSVT
+        HS65_GS_AOI13X2           CORE65GPSVT
+        HS65_GS_AOI22X1           CORE65GPSVT
+        HS65_GS_AOI112X2          CORE65GPSVT
+        HS65_GS_BFX4              CORE65GPSVT
+        HS65_GS_CB4I1X4           CORE65GPSVT
+        HS65_GS_CB4I6X4           CORE65GPSVT
+        HS65_GS_CBI4I1X3          CORE65GPSVT
+        HS65_GS_CBI4I6X2          CORE65GPSVT
+        HS65_GS_DFPRQX4           CORE65GPSVT
+        HS65_GS_FA1X4             CORE65GPSVT
+        HS65_GS_HA1X4             CORE65GPSVT
+        HS65_GS_IVX2              CORE65GPSVT
+        HS65_GS_IVX4              CORE65GPSVT
+        HS65_GS_MUX21I1X3         CORE65GPSVT
+        HS65_GS_MUX21X4           CORE65GPSVT
+        HS65_GS_MUXI21X2          CORE65GPSVT
+        HS65_GS_NAND2X2           CORE65GPSVT
+        HS65_GS_NAND3AX3          CORE65GPSVT
+        HS65_GS_NAND3X2           CORE65GPSVT
+        HS65_GS_NAND4ABX3         CORE65GPSVT
+        HS65_GS_NOR2AX3           CORE65GPSVT
+        HS65_GS_NOR2X2            CORE65GPSVT
+        HS65_GS_NOR2X3            CORE65GPSVT
+        HS65_GS_NOR3AX2           CORE65GPSVT
+        HS65_GS_NOR3X1            CORE65GPSVT
+        HS65_GS_OA12X4            CORE65GPSVT
+        HS65_GS_OAI12X3           CORE65GPSVT
+        HS65_GS_OAI21X2           CORE65GPSVT
+        HS65_GS_OAI22X1           CORE65GPSVT
+        HS65_GS_OAI32X2           CORE65GPSVT
+        HS65_GS_OAI112X1          CORE65GPSVT
+        HS65_GS_OR2X4             CORE65GPSVT
+        HS65_GS_OR3X4             CORE65GPSVT
+        HS65_GS_PAO2X4            CORE65GPSVT
+        HS65_GS_PAOI2X1           CORE65GPSVT
+    opti_sos_2                              r
+        HS65_GSS_XNOR2X3          CORE65GPSVT
+        HS65_GSS_XNOR2X6          CORE65GPSVT
+        HS65_GSS_XNOR3X2          CORE65GPSVT
+        HS65_GSS_XOR2X3           CORE65GPSVT
+        HS65_GSS_XOR3X2           CORE65GPSVT
+        HS65_GS_AND2X4            CORE65GPSVT
+        HS65_GS_AND3X4            CORE65GPSVT
+        HS65_GS_AO12X4            CORE65GPSVT
+        HS65_GS_AO22X4            CORE65GPSVT
+        HS65_GS_AO112X4           CORE65GPSVT
+        HS65_GS_AOI12X2           CORE65GPSVT
+        HS65_GS_AOI12X3           CORE65GPSVT
+        HS65_GS_AOI22X1           CORE65GPSVT
+        HS65_GS_BFX4              CORE65GPSVT
+        HS65_GS_CB4I1X4           CORE65GPSVT
+        HS65_GS_CB4I6X4           CORE65GPSVT
+        HS65_GS_CBI4I1X3          CORE65GPSVT
+        HS65_GS_CBI4I6X2          CORE65GPSVT
+        HS65_GS_DFPRQX4           CORE65GPSVT
+        HS65_GS_FA1X4             CORE65GPSVT
+        HS65_GS_HA1X4             CORE65GPSVT
+        HS65_GS_IVX2              CORE65GPSVT
+        HS65_GS_MUX21I1X3         CORE65GPSVT
+        HS65_GS_MUX21X4           CORE65GPSVT
+        HS65_GS_MUXI21X2          CORE65GPSVT
+        HS65_GS_NAND2X2           CORE65GPSVT
+        HS65_GS_NAND3AX3          CORE65GPSVT
+        HS65_GS_NAND3X2           CORE65GPSVT
+        HS65_GS_NOR2AX3           CORE65GPSVT
+        HS65_GS_NOR2X2            CORE65GPSVT
+        HS65_GS_NOR2X3            CORE65GPSVT
+        HS65_GS_NOR3AX2           CORE65GPSVT
+        HS65_GS_NOR3X1            CORE65GPSVT
+        HS65_GS_OA12X4            CORE65GPSVT
+        HS65_GS_OAI12X3           CORE65GPSVT
+        HS65_GS_OAI21X2           CORE65GPSVT
+        HS65_GS_OAI32X2           CORE65GPSVT
+        HS65_GS_OAI112X1          CORE65GPSVT
+        HS65_GS_OR3X4             CORE65GPSVT
+        HS65_GS_PAO2X4            CORE65GPSVT
+        HS65_GS_PAOI2X1           CORE65GPSVT
+    opti_sos_3                              r
+        HS65_GSS_XNOR2X3          CORE65GPSVT
+        HS65_GSS_XNOR3X2          CORE65GPSVT
+        HS65_GSS_XOR2X3           CORE65GPSVT
+        HS65_GSS_XOR3X2           CORE65GPSVT
+        HS65_GS_AND2X4            CORE65GPSVT
+        HS65_GS_AO12X4            CORE65GPSVT
+        HS65_GS_AO22X4            CORE65GPSVT
+        HS65_GS_AO31X4            CORE65GPSVT
+        HS65_GS_AO112X4           CORE65GPSVT
+        HS65_GS_AOI12X2           CORE65GPSVT
+        HS65_GS_AOI12X3           CORE65GPSVT
+        HS65_GS_AOI13X2           CORE65GPSVT
+        HS65_GS_AOI22X1           CORE65GPSVT
+        HS65_GS_AOI112X2          CORE65GPSVT
+        HS65_GS_BFX4              CORE65GPSVT
+        HS65_GS_CB4I1X4           CORE65GPSVT
+        HS65_GS_CB4I6X4           CORE65GPSVT
+        HS65_GS_CBI4I1X3          CORE65GPSVT
+        HS65_GS_CBI4I6X2          CORE65GPSVT
+        HS65_GS_DFPRQX4           CORE65GPSVT
+        HS65_GS_FA1X4             CORE65GPSVT
+        HS65_GS_HA1X4             CORE65GPSVT
+        HS65_GS_IVX2              CORE65GPSVT
+        HS65_GS_IVX4              CORE65GPSVT
+        HS65_GS_MUX21I1X3         CORE65GPSVT
+        HS65_GS_MUX21X4           CORE65GPSVT
+        HS65_GS_MUXI21X2          CORE65GPSVT
+        HS65_GS_NAND2AX4          CORE65GPSVT
+        HS65_GS_NAND2X2           CORE65GPSVT
+        HS65_GS_NAND3AX3          CORE65GPSVT
+        HS65_GS_NAND3X2           CORE65GPSVT
+        HS65_GS_NOR2AX3           CORE65GPSVT
+        HS65_GS_NOR2X2            CORE65GPSVT
+        HS65_GS_NOR2X3            CORE65GPSVT
+        HS65_GS_NOR3AX2           CORE65GPSVT
+        HS65_GS_NOR3X1            CORE65GPSVT
+        HS65_GS_OA12X4            CORE65GPSVT
+        HS65_GS_OAI12X3           CORE65GPSVT
+        HS65_GS_OAI13X1           CORE65GPSVT
+        HS65_GS_OAI21X2           CORE65GPSVT
+        HS65_GS_OAI22X1           CORE65GPSVT
+        HS65_GS_OAI32X2           CORE65GPSVT
+        HS65_GS_OAI112X1          CORE65GPSVT
+        HS65_GS_OR2X4             CORE65GPSVT
+        HS65_GS_PAO2X4            CORE65GPSVT
+        HS65_GS_PAOI2X1           CORE65GPSVT
+    opti_sos_4                              r
+        HS65_GSS_XNOR2X3          CORE65GPSVT
+        HS65_GSS_XNOR2X6          CORE65GPSVT
+        HS65_GSS_XNOR3X2          CORE65GPSVT
+        HS65_GSS_XOR2X3           CORE65GPSVT
+        HS65_GSS_XOR3X2           CORE65GPSVT
+        HS65_GS_AND2X4            CORE65GPSVT
+        HS65_GS_AND3X4            CORE65GPSVT
+        HS65_GS_AO12X4            CORE65GPSVT
+        HS65_GS_AO22X4            CORE65GPSVT
+        HS65_GS_AO112X4           CORE65GPSVT
+        HS65_GS_AOI12X2           CORE65GPSVT
+        HS65_GS_AOI13X2           CORE65GPSVT
+        HS65_GS_AOI22X1           CORE65GPSVT
+        HS65_GS_AOI112X2          CORE65GPSVT
+        HS65_GS_BFX4              CORE65GPSVT
+        HS65_GS_CB4I1X4           CORE65GPSVT
+        HS65_GS_CBI4I1X3          CORE65GPSVT
+        HS65_GS_CBI4I6X2          CORE65GPSVT
+        HS65_GS_DFPRQX4           CORE65GPSVT
+        HS65_GS_FA1X4             CORE65GPSVT
+        HS65_GS_HA1X4             CORE65GPSVT
+        HS65_GS_IVX2              CORE65GPSVT
+        HS65_GS_IVX4              CORE65GPSVT
+        HS65_GS_MUX21I1X3         CORE65GPSVT
+        HS65_GS_MUX21X4           CORE65GPSVT
+        HS65_GS_MUXI21X2          CORE65GPSVT
+        HS65_GS_NAND2AX4          CORE65GPSVT
+        HS65_GS_NAND2X2           CORE65GPSVT
+        HS65_GS_NAND3AX3          CORE65GPSVT
+        HS65_GS_NAND3X2           CORE65GPSVT
+        HS65_GS_NOR2AX3           CORE65GPSVT
+        HS65_GS_NOR2X2            CORE65GPSVT
+        HS65_GS_NOR2X3            CORE65GPSVT
+        HS65_GS_NOR2X5            CORE65GPSVT
+        HS65_GS_NOR3AX2           CORE65GPSVT
+        HS65_GS_NOR3X1            CORE65GPSVT
+        HS65_GS_OA12X4            CORE65GPSVT
+        HS65_GS_OAI12X3           CORE65GPSVT
+        HS65_GS_OAI21X2           CORE65GPSVT
+        HS65_GS_OAI32X2           CORE65GPSVT
+        HS65_GS_OAI112X1          CORE65GPSVT
+        HS65_GS_OR2X4             CORE65GPSVT
+        HS65_GS_OR3X4             CORE65GPSVT
+        HS65_GS_PAO2X4            CORE65GPSVT
+        HS65_GS_PAOI2X1           CORE65GPSVT
+1
+ 
+****************************************
+Report : reference
+Design : opti_top
+Version: J-2014.09-SP2
+Date   : Wed Jul 30 23:21:54 2025
+****************************************
+
+Attributes:
+    b - black box (unknown)
+   bo - allows boundary optimization
+    d - dont_touch
+   mo - map_only
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    s - synthetic operator
+    u - contains unmapped logic
+
+Reference          Library       Unit Area   Count    Total Area   Attributes
+-----------------------------------------------------------------------------
+opti_sos_0                     9525.359692       1   9525.359692  h, n
+opti_sos_1                    14335.879530       1  14335.879530  h, n
+opti_sos_2                    14827.799506       1  14827.799506  h, n
+opti_sos_3                    16072.159486       1  16072.159486  h, n
+opti_sos_4                    15949.439507       1  15949.439507  h, n
+-----------------------------------------------------------------------------
+Total 5 references                                  70710.637721
+1
